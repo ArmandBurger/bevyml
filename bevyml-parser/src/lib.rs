@@ -1,3 +1,5 @@
+pub use tree_sitter;
+
 use bevy_derive::{Deref, DerefMut};
 use std::{fs as blocking_fs, io, path::Path};
 use tokio::fs as tokio_fs;
