@@ -7,3 +7,5 @@ edition = "2024"
 tree-sitter-bevyml = { path = "../tree-sitter-bevyml" }
 tree-sitter = "0.26.3"
 bevy_derive = "0.17.3"
+pollster = "0.4.0"
+tokio = { version = "1.49.0", features = ["full"] }
