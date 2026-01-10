@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>First-Person HUD</title>
+  </head>
+  <body
+    style="
+      margin: 0;
+      font-family: 'Segoe UI', 'Segoe UI Semibold', sans-serif;
+      background: #0f172a;
+      color: #f1f5f9;
+    "
+  >
+    <div
+      style="
+        position: relative;
+        min-height: 100vh;
+        background: linear-gradient(
+          180deg,
+          #e5f1ff 0%,
+          #dbe8ff 35%,
+          #d1e6f7 70%,
+          #f3fbff 100%
+        );
+      "
+    >
+      <header
+        style="
+          position: absolute;
+          top: 0;
+          left: 0;
+          right: 0;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          padding: 14px 24px;
+          background: rgba(0, 45, 105, 0.85);
+          backdrop-filter: blur(12px);
+          border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        "
+      >
+        <div>
+          <p
+            style="
+              margin: 0;
+              font-size: 0.75rem;
+              letter-spacing: 0.25em;
+              color: #b8d3f5;
+              text-transform: uppercase;
+            "
+          >
+            Mission
+          </p>
+          <h1 style="margin: 4px 0 0; font-size: 1.6rem; color: #fefefe">
+            Operation Azure Dawn
+          </h1>
+        </div>
+        <div
+          style="
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 1.1rem;
+          "
+        >
+          <span
+            style="
+              font-size: 0.75rem;
+              letter-spacing: 0.3em;
+              text-transform: uppercase;
+              color: #d5e7ff;
+            "
+            >Timer</span
+          >
+          <span
+            style="
+              padding: 6px 14px;
+              border-radius: 999px;
+              background: rgba(255, 255, 255, 0.14);
+              border: 1px solid rgba(255, 255, 255, 0.4);
+            "
+            >07:42</span
+          >
+        </div>
+      </header>
+
+      <main
+        style="
+          position: absolute;
+          inset: 0;
+          padding: 80px 40px 100px;
+          display: flex;
+          justify-content: space-between;
+          align-items: stretch;
+        "
+      >
+        <div style="flex: 1; display: flex; justify-content: start">
+          <div
+            style="
+              width: 280px;
+              height: 280px;
+              border-radius: 18px;
+              border: 2px solid #214170;
+              background: linear-gradient(180deg, #ebf2ff, #d1e6fb);
+              box-shadow: 0 20px 40px rgba(15, 23, 42, 0.35);
+              display: flex;
+              flex-direction: column;
+              padding: 16px;
+            "
+          >
+            <h2 style="margin: 0 0 8px; font-size: 1rem; color: #0d1c2f">
+              Mini-Map
+            </h2>
+            <div
+              style="
+                flex: 1;
+                border-radius: 14px;
+                border: 1px dashed rgba(0, 65, 128, 0.35);
+                background: rgba(10, 30, 70, 0.6);
+                position: relative;
+                overflow: hidden;
+              "
+            >
+              <div
+                style="
+                  position: absolute;
+                  inset: 16px;
+                  border-radius: 10px;
+                  background: rgba(14, 99, 183, 0.4);
+                "
+              >
+                <span
+                  style="
+                    position: absolute;
+                    left: 20px;
+                    top: 30px;
+                    font-size: 0.8rem;
+                    color: #d5e7ff;
+                  "
+                  >Objective</span
+                >
+              </div>
+              <span
+                style="
+                  position: absolute;
+                  bottom: 16px;
+                  right: 16px;
+                  font-size: 0.7rem;
+                  color: #a4c5f4;
+                "
+                >Coordinates: A2</span
+              >
+            </div>
+            <div
+              style="
+                margin-top: 12px;
+                display: flex;
+                justify-content: space-between;
+                font-size: 0.8rem;
+                color: #23406e;
+              "
+            >
+              <span>North</span>
+              <span>Eagle Nest</span>
+              <span>South</span>
+            </div>
+          </div>
+        </div>
+        <div
+          style="
+            flex: 1;
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+          "
+        >
+          <div style="display: flex; flex-direction: column; gap: 12px">
+            <div style="display: flex; gap: 6px; align-items: center">
+              <div
+                style="
+                  width: 12px;
+                  height: 12px;
+                  border-radius: 999px;
+                  background: #2ec4d7;
+                "
+              ></div>
+              <p
+                style="
+                  margin: 0;
+                  font-size: 0.8rem;
+                  letter-spacing: 0.2em;
+                  color: #1b3658;
+                "
+              >
+                Notifications
+              </p>
+            </div>
+            <div
+              style="
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+                padding: 12px;
+                border-radius: 14px;
+                background: rgba(12, 34, 74, 0.7);
+                border: 1px solid rgba(255, 255, 255, 0.15);
+                min-width: 320px;
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.25);
+              "
+            >
+              <p style="margin: 0; font-size: 0.9rem; color: #edf2ff">
+                <span style="font-weight: 600; color: #9bd4ff">[+]</span> Supply
+                convoy inbound, ETA 2m
+              </p>
+              <p style="margin: 0; font-size: 0.85rem; color: #c9d8ff">
+                <span style="font-weight: 600; color: #7adeff">[!]</span> Shield
+                node recalibrated to 88%
+              </p>
+              <p style="margin: 0; font-size: 0.8rem; color: #a4bffd">
+                <span style="font-weight: 600; color: #6fb4ff">[-]</span> Radar
+                pings trending normal
+              </p>
+              <p style="margin: 0; font-size: 0.8rem; color: #c3d1ff">
+                <span style="font-weight: 600; color: #85cfff">[+]</span> Drone
+                swarm ready · 6
+              </p>
+              <p style="margin: 0; font-size: 0.75rem; color: #9fb1d9">
+                <span style="font-weight: 600; color: #6fb9ff">[i]</span> Wind
+                shear <span style="color: #2c4175">0.8G</span>
+              </p>
+            </div>
+          </div>
+        </div>
+      </main>
+
+      <div
+        style="
+          position: absolute;
+          bottom: 20px;
+          left: 20px;
+          display: flex;
+          gap: 16px;
+        "
+      >
+        <div style="display: flex; flex-direction: column; gap: 10px">
+          <div
+            style="
+              border-radius: 16px;
+              border: 1px solid rgba(13, 41, 83, 0.4);
+              padding: 12px 16px;
+              background: rgba(255, 255, 255, 0.9);
+              backdrop-filter: blur(6px);
+              box-shadow: 0 12px 28px rgba(0, 0, 0, 0.3);
+            "
+          >
+            <p
+              style="
+                margin: 0 0 6px;
+                font-size: 0.8rem;
+                letter-spacing: 0.2em;
+                color: #174b87;
+              "
+            >
+              Health
+            </p>
+            <div
+              style="
+                height: 10px;
+                border-radius: 999px;
+                background: rgba(12, 41, 83, 0.3);
+              "
+            >
+              <div
+                style="
+                  width: 78%;
+                  height: 100%;
+                  border-radius: 999px;
+                  background: linear-gradient(90deg, #12c2e9, #1d8dff);
+                "
+              ></div>
+            </div>
+            <span style="font-size: 0.7rem; color: #45598a">78 / 100</span>
+          </div>
+          <div
+            style="
+              border-radius: 16px;
+              border: 1px solid rgba(13, 41, 83, 0.4);
+              padding: 12px 16px;
+              background: rgba(255, 255, 255, 0.9);
+              backdrop-filter: blur(6px);
+              box-shadow: 0 12px 28px rgba(0, 0, 0, 0.3);
+            "
+          >
+            <p
+              style="
+                margin: 0 0 6px;
+                font-size: 0.8rem;
+                letter-spacing: 0.2em;
+                color: #174b87;
+              "
+            >
+              Stamina
+            </p>
+            <div
+              style="
+                height: 10px;
+                border-radius: 999px;
+                background: rgba(12, 41, 83, 0.3);
+              "
+            >
+              <div
+                style="
+                  width: 55%;
+                  height: 100%;
+                  border-radius: 999px;
+                  background: linear-gradient(90deg, #3ad29f, #32a852);
+                "
+              ></div>
+            </div>
+            <span style="font-size: 0.7rem; color: #45598a">55 / 100</span>
+          </div>
+          <div
+            style="
+              border-radius: 16px;
+              border: 1px solid rgba(13, 41, 83, 0.4);
+              padding: 12px 16px;
+              background: rgba(255, 255, 255, 0.9);
+              backdrop-filter: blur(6px);
+              box-shadow: 0 12px 28px rgba(0, 0, 0, 0.3);
+            "
+          >
+            <p
+              style="
+                margin: 0 0 6px;
+                font-size: 0.8rem;
+                letter-spacing: 0.2em;
+                color: #174b87;
+              "
+            >
+              Shield
+            </p>
+            <div
+              style="
+                height: 10px;
+                border-radius: 999px;
+                background: rgba(12, 41, 83, 0.3);
+              "
+            >
+              <div
+                style="
+                  width: 91%;
+                  height: 100%;
+                  border-radius: 999px;
+                  background: linear-gradient(90deg, #34b5ff, #1a4dc3);
+                "
+              ></div>
+            </div>
+            <span style="font-size: 0.7rem; color: #45598a"
+              >Interior integrity 91%</span
+            >
+          </div>
+        </div>
+      </div>
+
+      <div
+        style="
+          position: absolute;
+          bottom: 16px;
+          right: 24px;
+          display: flex;
+          flex-direction: column;
+          gap: 12px;
+          align-items: flex-end;
+        "
+      >
+        <div
+          style="
+            border-radius: 16px;
+            border: 1px solid rgba(15, 36, 79, 0.5);
+            padding: 12px 18px;
+            background: rgba(255, 255, 255, 0.9);
+            min-width: 220px;
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.25);
+          "
+        >
+          <p
+            style="
+              margin: 0;
+              font-size: 0.75rem;
+              letter-spacing: 0.2em;
+              color: #1a3f75;
+            "
+          >
+            Ammo
+          </p>
+          <h3 style="margin: 4px 0 2px; font-size: 1.5rem; color: #0e1f3d">
+            120 / 240
+          </h3>
+          <p style="margin: 0; font-size: 0.8rem; color: #2c437b">
+            Rifle Cartridges · Auto
+          </p>
+        </div>
+        <div
+          style="
+            border-radius: 16px;
+            border: 1px solid rgba(15, 36, 79, 0.5);
+            padding: 12px 18px;
+            background: rgba(255, 255, 255, 0.95);
+            min-width: 220px;
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.25);
+          "
+        >
+          <p
+            style="
+              margin: 0;
+              font-size: 0.75rem;
+              letter-spacing: 0.2em;
+              color: #1a3f75;
+            "
+          >
+            Weapon
+          </p>
+          <strong style="font-size: 1.2rem; color: #0f1c32"
+            >Vindicator-9</strong
+          >
+          <div
+            style="
+              display: flex;
+              justify-content: space-between;
+              font-size: 0.75rem;
+              color: #2c437b;
+              margin-top: 4px;
+            "
+          >
+            <span>Rate: 680rpm</span>
+            <span>Mode: Burst</span>
+          </div>
+        </div>
+      </div>
+      <div
+        style="
+          position: absolute;
+          bottom: 50%;
+          left: 50%;
+          transform: translate(-50%, 10%);
+          width: 320px;
+          border-radius: 18px;
+          border: 1px solid rgba(28, 58, 99, 0.4);
+          background: rgba(255, 255, 255, 0.9);
+          padding: 16px;
+          box-shadow: 0 25px 45px rgba(0, 0, 0, 0.35);
+          display: flex;
+          flex-direction: column;
+          gap: 10px;
+        "
+      >
+        <h4
+          style="
+            margin: 0;
+            font-size: 0.95rem;
+            letter-spacing: 0.2em;
+            color: #0f2445;
+          "
+        >
+          Threat Matrix
+        </h4>
+        <div style="display: flex; gap: 6px">
+          <span
+            style="
+              flex: 1;
+              padding: 6px 8px;
+              border-radius: 8px;
+              background: rgba(255, 238, 250, 0.7);
+              border: 1px solid rgba(255, 180, 214, 0.7);
+              text-align: center;
+              font-size: 0.8rem;
+            "
+            >Low</span
+          >
+          <span
+            style="
+              flex: 1;
+              padding: 6px 8px;
+              border-radius: 8px;
+              background: rgba(214, 255, 245, 0.7);
+              border: 1px solid rgba(155, 216, 213, 0.7);
+              text-align: center;
+              font-size: 0.8rem;
+            "
+            >Medium</span
+          >
+          <span
+            style="
+              flex: 1;
+              padding: 6px 8px;
+              border-radius: 8px;
+              background: rgba(250, 235, 213, 0.7);
+              border: 1px solid rgba(255, 206, 162, 0.7);
+              text-align: center;
+              font-size: 0.8rem;
+            "
+            >High</span
+          >
+        </div>
+        <p
+          style="margin: 0; font-size: 0.8rem; color: #2e3a5a; line-height: 1.4"
+        >
+          Current sector stability is strong, but red clouds have been spotted
+          near the orbital ring. Watch for flares.
+        </p>
+      </div>
+    </div>
+  </body>
+</html>

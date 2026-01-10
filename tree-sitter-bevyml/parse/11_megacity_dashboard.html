@@ -1,0 +1,830 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>MegaCity Operations Dashboard</title>
+  </head>
+  <body
+    style="
+      margin: 0;
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      background: #02030a;
+      color: #f3f6fb;
+      height: 100vh;
+      overflow: hidden;
+    "
+  >
+    <div
+      style="
+        display: flex;
+        flex-direction: column;
+        height: 100vh;
+        border: 4px solid #112;
+        background: #05070f;
+        overflow: hidden;
+      "
+    >
+      <header
+        style="
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          padding: 16px 24px;
+          background: linear-gradient(90deg, #03142b, #0b2c55);
+          border-bottom: 2px solid #126;
+          position: sticky;
+          top: 0;
+          z-index: 10;
+        "
+      >
+        <div style="display: flex; align-items: center; gap: 12px">
+          <div
+            style="
+              width: 56px;
+              height: 56px;
+              border-radius: 12px;
+              background: radial-gradient(circle, #48f6ff, #0e2d66);
+              border: 2px solid #79ddff;
+            "
+          ></div>
+          <div>
+            <h1 style="margin: 0; font-size: 1.6rem; letter-spacing: 0.08em">
+              MegaCity OPS
+            </h1>
+            <p style="margin: 0; font-size: 0.85rem; color: #9ac1ff">
+              Live command surface
+            </p>
+          </div>
+        </div>
+        <nav
+          style="
+            display: flex;
+            gap: 18px;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+          "
+        >
+          <span
+            style="
+              padding: 8px 14px;
+              border-radius: 999px;
+              border: 1px solid #45b8ff;
+            "
+            >Dashboard</span
+          >
+          <span
+            style="
+              padding: 8px 14px;
+              border-radius: 999px;
+              border: 1px solid transparent;
+              opacity: 0.8;
+            "
+            >Logistics</span
+          >
+          <span
+            style="
+              padding: 8px 14px;
+              border-radius: 999px;
+              border: 1px solid transparent;
+              opacity: 0.8;
+            "
+            >Security</span
+          >
+          <span
+            style="
+              padding: 8px 14px;
+              border-radius: 999px;
+              border: 1px solid transparent;
+              opacity: 0.8;
+            "
+            >Engagement</span
+          >
+        </nav>
+      </header>
+
+      <div style="display: flex; flex: 1; overflow: hidden; min-height: 0">
+        <aside
+          style="
+            width: 260px;
+            background: #0b1321;
+            padding: 24px 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            border-right: 2px solid #1f2f44;
+            overflow: auto;
+          "
+        >
+          <h2 style="margin: 0 0 8px; font-size: 1rem; letter-spacing: 0.2em">
+            L.E.G.I.O.N
+          </h2>
+          <div style="display: flex; flex-direction: column; gap: 6px">
+            <div
+              style="
+                padding: 10px 14px;
+                border-radius: 8px;
+                background: #111a2b;
+                border: 1px solid #22304d;
+              "
+            >
+              Command Center
+            </div>
+            <div
+              style="
+                padding: 10px 14px;
+                border-radius: 8px;
+                background: #0c1321;
+                border: 1px solid #22304d;
+              "
+            >
+              Traffic Grid
+            </div>
+            <div
+              style="
+                padding: 10px 14px;
+                border-radius: 8px;
+                background: #0c1321;
+                border: 1px solid #22304d;
+              "
+            >
+              Sensor Array
+            </div>
+            <div
+              style="
+                padding: 10px 14px;
+                border-radius: 8px;
+                background: #0c1321;
+                border: 1px solid #22304d;
+              "
+            >
+              Air Filtration
+            </div>
+            <div
+              style="
+                padding: 10px 14px;
+                border-radius: 8px;
+                background: #0c1321;
+                border: 1px solid #22304d;
+              "
+            >
+              Power Nexus
+            </div>
+            <div
+              style="
+                padding: 10px 14px;
+                border-radius: 8px;
+                background: #0c1321;
+                border: 1px solid #22304d;
+              "
+            >
+              Hydro Grid
+            </div>
+            <div
+              style="
+                padding: 10px 14px;
+                border-radius: 8px;
+                background: #0c1321;
+                border: 1px solid #22304d;
+              "
+            >
+              Supply Chain
+            </div>
+            <div
+              style="
+                padding: 10px 14px;
+                border-radius: 8px;
+                background: #0c1321;
+                border: 1px solid #22304d;
+              "
+            >
+              Intel
+            </div>
+            <div
+              style="
+                padding: 10px 14px;
+                border-radius: 8px;
+                background: #0c1321;
+                border: 1px solid #22304d;
+              "
+            >
+              Field Ops
+            </div>
+            <div
+              style="
+                padding: 10px 14px;
+                border-radius: 8px;
+                background: #0c1321;
+                border: 1px solid #22304d;
+              "
+            >
+              Maintenance
+            </div>
+          </div>
+        </aside>
+
+        <main
+          style="
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+            padding: 24px;
+            overflow: auto;
+            min-height: 0;
+          "
+        >
+          <section
+            style="
+              display: grid;
+              grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+              gap: 16px;
+            "
+          >
+            <article
+              style="
+                padding: 18px;
+                border-radius: 14px;
+                background: #10182a;
+                border: 1px solid #2b3856;
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+              "
+            >
+              <h3
+                style="
+                  margin: 0;
+                  font-size: 0.85rem;
+                  text-transform: uppercase;
+                  letter-spacing: 0.2em;
+                "
+              >
+                Climate Control
+              </h3>
+              <p style="margin: 0; font-size: 2rem; font-weight: 600">84°F</p>
+              <span style="font-size: 0.75rem; color: #8fd1ff"
+                >Stable · +1.2° Δ</span
+              >
+            </article>
+            <article
+              style="
+                padding: 18px;
+                border-radius: 14px;
+                background: #10182a;
+                border: 1px solid #2b3856;
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+              "
+            >
+              <h3 style="margin: 0; font-size: 0.85rem">Power Reserve</h3>
+              <p style="margin: 0; font-size: 2rem; font-weight: 600">98%</p>
+              <span style="font-size: 0.75rem; color: #6afa7f">Nominal</span>
+            </article>
+            <article
+              style="
+                padding: 18px;
+                border-radius: 14px;
+                background: #10182a;
+                border: 1px solid #2b3856;
+              "
+            >
+              <h3 style="margin: 0; font-size: 0.85rem">Transit Flow</h3>
+              <p style="margin: 0; font-size: 2rem; font-weight: 600">1.2M</p>
+              <span style="font-size: 0.75rem; color: #ffc54c"
+                >+3.4% vs last hr</span
+              >
+            </article>
+            <article
+              style="
+                padding: 18px;
+                border-radius: 14px;
+                background: #10182a;
+                border: 1px solid #2b3856;
+              "
+            >
+              <h3 style="margin: 0; font-size: 0.85rem">Water Cloud</h3>
+              <p style="margin: 0; font-size: 2rem; font-weight: 600">63%</p>
+              <span style="font-size: 0.75rem; color: #8fd1ff">Optimal</span>
+            </article>
+            <article
+              style="
+                padding: 18px;
+                border-radius: 14px;
+                background: #10182a;
+                border: 1px solid #2b3856;
+              "
+            >
+              <h3 style="margin: 0; font-size: 0.85rem">Bin Load</h3>
+              <p style="margin: 0; font-size: 2rem; font-weight: 600">42%</p>
+              <span style="font-size: 0.75rem; color: #ff6f6f"
+                >Collection trending high</span
+              >
+            </article>
+            <article
+              style="
+                padding: 18px;
+                border-radius: 14px;
+                background: #10182a;
+                border: 1px solid #2b3856;
+              "
+            >
+              <h3 style="margin: 0; font-size: 0.85rem">Drone Fleet</h3>
+              <p style="margin: 0; font-size: 2rem; font-weight: 600">
+                128/150
+              </p>
+              <span style="font-size: 0.75rem; color: #6afa7f">Ready</span>
+            </article>
+            <article
+              style="
+                padding: 18px;
+                border-radius: 14px;
+                background: #10182a;
+                border: 1px solid #2b3856;
+              "
+            >
+              <h3 style="margin: 0; font-size: 0.85rem">Embassy Traffic</h3>
+              <p style="margin: 0; font-size: 2rem; font-weight: 600">12</p>
+              <span style="font-size: 0.75rem; color: #ffc54c"
+                >Low congestion</span
+              >
+            </article>
+            <article
+              style="
+                padding: 18px;
+                border-radius: 14px;
+                background: #10182a;
+                border: 1px solid #2b3856;
+              "
+            >
+              <h3 style="margin: 0; font-size: 0.85rem">Skybridge Load</h3>
+              <p style="margin: 0; font-size: 2rem; font-weight: 600">78%</p>
+              <span style="font-size: 0.75rem; color: #8fd1ff"
+                >Maintaining</span
+              >
+            </article>
+            <article
+              style="
+                padding: 18px;
+                border-radius: 14px;
+                background: #10182a;
+                border: 1px solid #2b3856;
+              "
+            >
+              <h3 style="margin: 0; font-size: 0.85rem">Cargo Bays</h3>
+              <p style="margin: 0; font-size: 2rem; font-weight: 600">
+                37 docked
+              </p>
+              <span style="font-size: 0.75rem; color: #6afa7f">Ready</span>
+            </article>
+            <article
+              style="
+                padding: 18px;
+                border-radius: 14px;
+                background: #10182a;
+                border: 1px solid #2b3856;
+              "
+            >
+              <h3 style="margin: 0; font-size: 0.85rem">Security Threads</h3>
+              <p style="margin: 0; font-size: 2rem; font-weight: 600">
+                3 alerts
+              </p>
+              <span style="font-size: 0.75rem; color: #ff6f6f"
+                >Investigating</span
+              >
+            </article>
+            <article
+              style="
+                padding: 18px;
+                border-radius: 14px;
+                background: #10182a;
+                border: 1px solid #2b3856;
+              "
+            >
+              <h3 style="margin: 0; font-size: 0.85rem">Citizen Mood</h3>
+              <p style="margin: 0; font-size: 2rem; font-weight: 600">87%</p>
+              <span style="font-size: 0.75rem; color: #6afa7f">Stable</span>
+            </article>
+            <article
+              style="
+                padding: 18px;
+                border-radius: 14px;
+                background: #10182a;
+                border: 1px solid #2b3856;
+              "
+            >
+              <h3 style="margin: 0; font-size: 0.85rem">Waste Repurposed</h3>
+              <p style="margin: 0; font-size: 2rem; font-weight: 600">68%</p>
+              <span style="font-size: 0.75rem; color: #8fd1ff">Optimal</span>
+            </article>
+          </section>
+
+          <section style="display: flex; flex-wrap: wrap; gap: 18px">
+            <div
+              style="
+                flex: 1 1 320px;
+                min-width: 260px;
+                background: #081120;
+                border: 1px solid #1b3046;
+                border-radius: 16px;
+                padding: 20px;
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.45);
+                display: flex;
+                flex-direction: column;
+              "
+            >
+              <header
+                style="
+                  display: flex;
+                  justify-content: space-between;
+                  align-items: center;
+                  margin-bottom: 12px;
+                "
+              >
+                <h3 style="margin: 0; font-size: 1rem">Systems Panel</h3>
+                <span style="font-size: 0.75rem; color: #7be1ff">Realtime</span>
+              </header>
+              <div style="display: flex; gap: 12px; flex-wrap: wrap">
+                <span
+                  style="
+                    flex: 1;
+                    min-width: 110px;
+                    padding: 10px 12px;
+                    border-radius: 12px;
+                    background: #0b1a2d;
+                    border: 1px solid #2a415f;
+                  "
+                  >Cooling: 42%</span
+                >
+                <span
+                  style="
+                    flex: 1;
+                    min-width: 110px;
+                    padding: 10px 12px;
+                    border-radius: 12px;
+                    background: #0b1a2d;
+                    border: 1px solid #2a415f;
+                  "
+                  >Pumps: 16 online</span
+                >
+                <span
+                  style="
+                    flex: 1;
+                    min-width: 110px;
+                    padding: 10px 12px;
+                    border-radius: 12px;
+                    background: #0b1a2d;
+                    border: 1px solid #2a415f;
+                  "
+                  >Valves: 4 error</span
+                >
+              </div>
+              <p
+                style="
+                  margin-top: 16px;
+                  margin-bottom: 8px;
+                  font-size: 0.85rem;
+                  color: #cdd7ff;
+                "
+              >
+                Vertical stack of subsystem summaries with depth indicators.
+              </p>
+              <div style="display: flex; flex-direction: column; gap: 8px">
+                <span
+                  style="
+                    display: flex;
+                    justify-content: space-between;
+                    font-size: 0.8rem;
+                    color: #9aa7bf;
+                  "
+                >
+                  <strong>Reactive Burn</strong>
+                  <em>19ms</em>
+                </span>
+                <span
+                  style="
+                    display: flex;
+                    justify-content: space-between;
+                    font-size: 0.8rem;
+                    color: #9aa7bf;
+                  "
+                >
+                  <strong>Grid Sync</strong>
+                  <em>Stable</em>
+                </span>
+                <span
+                  style="
+                    display: flex;
+                    justify-content: space-between;
+                    font-size: 0.8rem;
+                    color: #9aa7bf;
+                  "
+                >
+                  <strong>Atmos Filter</strong>
+                  <em>Nominal</em>
+                </span>
+              </div>
+            </div>
+            <div
+              style="
+                flex: 1 1 240px;
+                min-width: 220px;
+                background: #081120;
+                border: 1px solid #1b3046;
+                border-radius: 16px;
+                padding: 18px;
+                display: flex;
+                flex-direction: column;
+                gap: 10px;
+              "
+            >
+              <h3 style="margin: 0; font-size: 1rem">Field Relay</h3>
+              <p style="margin: 0; font-size: 0.9rem; color: #9ac1ff">
+                Full duplex channels with emergency fallback.
+              </p>
+              <div style="display: flex; gap: 8px; flex-wrap: wrap">
+                <span
+                  style="
+                    flex: 1;
+                    min-width: 100px;
+                    padding: 10px;
+                    background: #0b1a2d;
+                    border: 1px solid #2a415f;
+                    border-radius: 10px;
+                  "
+                  >Node 01 · Active</span
+                >
+                <span
+                  style="
+                    flex: 1;
+                    min-width: 100px;
+                    padding: 10px;
+                    background: #0b1a2d;
+                    border: 1px solid #2a415f;
+                    border-radius: 10px;
+                  "
+                  >Node 02 · Active</span
+                >
+              </div>
+              <div
+                style="
+                  flex: 1;
+                  min-height: 90px;
+                  background: #050913;
+                  border-radius: 10px;
+                  border: 1px solid #1c273c;
+                  padding: 12px;
+                  display: flex;
+                  flex-direction: column;
+                  justify-content: center;
+                "
+              >
+                <p style="margin: 0; font-size: 0.75rem; color: #77d7ff">
+                  Latency 28ms · Uptime 99.99%
+                </p>
+              </div>
+            </div>
+            <div
+              style="
+                flex: 1 1 220px;
+                min-width: 200px;
+                background: #081120;
+                border: 1px solid #1b3046;
+                border-radius: 16px;
+                padding: 18px;
+              "
+            >
+              <h3 style="margin: 0; font-size: 1rem">Sensor Beacon</h3>
+              <p style="margin: 8px 0 0; font-size: 0.9rem; color: #9acdff">
+                Scan radius 48km · 3 active sweeps
+              </p>
+              <div
+                style="
+                  margin-top: 12px;
+                  display: grid;
+                  grid-template-columns: repeat(2, minmax(0, 1fr));
+                  gap: 6px;
+                "
+              >
+                <span
+                  style="
+                    padding: 10px;
+                    border-radius: 8px;
+                    background: #0b1a2d;
+                    border: 1px solid #2a415f;
+                  "
+                  >Air</span
+                >
+                <span
+                  style="
+                    padding: 10px;
+                    border-radius: 8px;
+                    background: #0b1a2d;
+                    border: 1px solid #2a415f;
+                  "
+                  >Rail</span
+                >
+                <span
+                  style="
+                    padding: 10px;
+                    border-radius: 8px;
+                    background: #0b1a2d;
+                    border: 1px solid #2a415f;
+                  "
+                  >Marine</span
+                >
+                <span
+                  style="
+                    padding: 10px;
+                    border-radius: 8px;
+                    background: #0b1a2d;
+                    border: 1px solid #2a415f;
+                  "
+                  >Subsurface</span
+                >
+              </div>
+            </div>
+          </section>
+
+          <section
+            style="
+              background: #0b1321;
+              padding: 20px;
+              border-radius: 20px;
+              border: 1px solid #1f2f44;
+              display: flex;
+              flex-direction: column;
+              gap: 14px;
+            "
+          >
+            <div style="display: flex; flex-direction: column; gap: 12px">
+              <article
+                style="
+                  background: #111b2f;
+                  border-radius: 14px;
+                  padding: 16px;
+                  border: 1px solid #1f2f44;
+                  display: flex;
+                  flex-direction: column;
+                  gap: 8px;
+                "
+              >
+                <h3 style="margin: 0; font-size: 1rem">Urban Mobility</h3>
+                <p style="margin: 0; color: #cdd7ff">
+                  Multi-modal paths remain fluid thanks to predictive reroutes.
+                </p>
+                <p style="margin: 0; color: #9ab4ff">
+                  Traffic sensors recorded 2.4 million traversals in the last
+                  hour.
+                </p>
+              </article>
+              <article
+                style="
+                  background: #111b2f;
+                  border-radius: 14px;
+                  padding: 16px;
+                  border: 1px solid #1f2f44;
+                  display: flex;
+                  flex-direction: column;
+                  gap: 8px;
+                "
+              >
+                <h3 style="margin: 0; font-size: 1rem">Atmospheric Wellness</h3>
+                <p style="margin: 0; color: #cdd7ff">
+                  Air scrubbing arrays operating at 93% efficiency with spare
+                  capacity.
+                </p>
+                <p style="margin: 0; color: #9ab4ff">
+                  Nanomist dispersal engaged in Precinct 7 as a preventative
+                  measure.
+                </p>
+              </article>
+            </div>
+            <div style="display: flex; flex-wrap: wrap; gap: 12px">
+              <article
+                style="
+                  flex: 1;
+                  min-width: 220px;
+                  background: #081120;
+                  border-radius: 14px;
+                  padding: 14px;
+                  border: 1px solid #1f2f44;
+                "
+              >
+                <h4 style="margin: 0; font-size: 0.95rem">Sector Briefing</h4>
+                <p style="margin: 6px 0 0; color: #cdd7ff">
+                  Sector 11 is clear. Minimal disruptions in cargo lanes.
+                </p>
+              </article>
+              <article
+                style="
+                  flex: 1;
+                  min-width: 220px;
+                  background: #081120;
+                  border-radius: 14px;
+                  padding: 14px;
+                  border: 1px solid #1f2f44;
+                "
+              >
+                <h4 style="margin: 0; font-size: 0.95rem">Lumen Grid</h4>
+                <p style="margin: 6px 0 0; color: #cdd7ff">
+                  Ambient light levels hold at 420 lux with automated dimming.
+                </p>
+              </article>
+              <article
+                style="
+                  flex: 1;
+                  min-width: 220px;
+                  background: #081120;
+                  border-radius: 14px;
+                  padding: 14px;
+                  border: 1px solid #1f2f44;
+                "
+              >
+                <h4 style="margin: 0; font-size: 0.95rem">Quantum Relay</h4>
+                <p style="margin: 6px 0 0; color: #cdd7ff">
+                  Pulse alignment scheduled in 3 minutes.
+                </p>
+              </article>
+            </div>
+          </section>
+        </main>
+      </div>
+
+      <footer
+        style="
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          padding: 14px 24px;
+          background: #03102a;
+          border-top: 2px solid #1b2c44;
+        "
+      >
+        <div
+          style="
+            display: flex;
+            gap: 16px;
+            align-items: center;
+            font-size: 0.85rem;
+          "
+        >
+          <span
+            style="
+              display: flex;
+              flex-direction: column;
+              font-size: 0.7rem;
+              color: #aaaaaa;
+            "
+            >UTC</span
+          >
+          <strong style="font-size: 1.2rem">08:24</strong>
+        </div>
+        <div style="display: flex; gap: 12px; flex-wrap: wrap">
+          <span
+            style="
+              padding: 8px 12px;
+              border-radius: 12px;
+              border: 1px solid #0a2c47;
+            "
+            >Ops ready</span
+          >
+          <span
+            style="
+              padding: 8px 12px;
+              border-radius: 12px;
+              border: 1px solid #0a2c47;
+            "
+            >Links stable</span
+          >
+          <span
+            style="
+              padding: 8px 12px;
+              border-radius: 12px;
+              border: 1px solid #0a2c47;
+            "
+            >Sensors synced</span
+          >
+        </div>
+        <div
+          style="display: flex; gap: 10px; font-size: 0.8rem; color: #9ab4ff"
+        >
+          <span style="display: flex; flex-direction: column"
+            ><strong style="font-size: 1rem">62%</strong
+            ><span>Neon stock</span></span
+          >
+          <span style="display: flex; flex-direction: column"
+            ><strong style="font-size: 1rem">14</strong
+            ><span>Alerts</span></span
+          >
+          <span style="display: flex; flex-direction: column"
+            ><strong style="font-size: 1rem">3</strong
+            ><span>Links degraded</span></span
+          >
+        </div>
+      </footer>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Pixelverse Map Overlay</title>
+  </head>
+  <body
+    style="
+      margin: 0;
+      font-family: 'Minecraftia', 'Press Start 2P', sans-serif;
+      background: #0b3d0b;
+      color: #f5f5f5;
+      min-height: 100vh;
+    "
+  >
+    <div
+      style="
+        position: relative;
+        height: 100vh;
+        overflow: hidden;
+        background: linear-gradient(180deg, #7cc577, #2f7a2f);
+      "
+    >
+      <div
+        style="
+          position: absolute;
+          inset: 0;
+          background: linear-gradient(
+            135deg,
+            rgba(0, 0, 0, 0.3),
+            rgba(0, 0, 0, 0)
+          );
+          pointer-events: none;
+        "
+      ></div>
+      <div
+        style="
+          position: absolute;
+          top: 20px;
+          left: 20px;
+          bottom: 20px;
+          width: 160px;
+          background: rgba(23, 72, 23, 0.95);
+          border: 2px solid #83e08c;
+          border-radius: 20px;
+          padding: 16px;
+          display: flex;
+          flex-direction: column;
+          gap: 12px;
+          box-shadow: 0 25px 40px rgba(0, 0, 0, 0.5);
+        "
+      >
+        <h1
+          style="
+            margin: 0;
+            font-size: 1rem;
+            letter-spacing: 0.2em;
+            color: #a8ffb8;
+          "
+        >
+          TOOLS
+        </h1>
+        <button
+          style="
+            border: none;
+            background: #2c8d42;
+            color: #f5f5f5;
+            border-radius: 12px;
+            padding: 8px;
+            font-size: 0.75rem;
+          "
+        >
+          Waypoints
+        </button>
+        <button
+          style="
+            border: none;
+            background: #3fac5c;
+            color: #0b3d12;
+            border-radius: 12px;
+            padding: 8px;
+            font-size: 0.75rem;
+          "
+        >
+          Pings
+        </button>
+        <button
+          style="
+            border: none;
+            background: #3fac5c;
+            color: #132d12;
+            border-radius: 12px;
+            padding: 8px;
+            font-size: 0.75rem;
+          "
+        >
+          Signals
+        </button>
+        <button
+          style="
+            border: none;
+            background: #3fbe62;
+            color: #0b2d10;
+            border-radius: 12px;
+            padding: 8px;
+            font-size: 0.75rem;
+          "
+        >
+          Grid
+        </button>
+        <button
+          style="
+            border: none;
+            background: #83e08c;
+            color: #062207;
+            border-radius: 12px;
+            padding: 8px;
+            font-size: 0.75rem;
+          "
+        >
+          Craft
+        </button>
+      </div>
+      <main
+        style="
+          position: absolute;
+          top: 32px;
+          left: 220px;
+          right: 220px;
+          bottom: 180px;
+          display: flex;
+          align-items: stretch;
+          gap: 18px;
+          padding: 0;
+        "
+      >
+        <section
+          style="
+            flex: 1;
+            border-radius: 28px;
+            background: rgba(10, 24, 10, 0.85);
+            border: 3px solid #49b047;
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.6);
+          "
+        >
+          <header
+            style="
+              display: flex;
+              justify-content: space-between;
+              align-items: center;
+              margin-bottom: 16px;
+            "
+          >
+            <div>
+              <h2 style="margin: 0; font-size: 2rem; letter-spacing: 0.1em">
+                World Map
+              </h2>
+              <p style="margin: 4px 0 0; font-size: 0.85rem; color: #c1ffd8">
+                Pixelverse · Region 12
+              </p>
+            </div>
+            <div style="display: flex; gap: 8px; font-size: 0.75rem">
+              <span
+                style="
+                  padding: 4px 10px;
+                  border-radius: 999px;
+                  border: 1px solid #5bd375;
+                  background: rgba(255, 255, 255, 0.1);
+                "
+                >Day</span
+              >
+              <span
+                style="
+                  padding: 4px 10px;
+                  border-radius: 999px;
+                  border: 1px solid #4d5fac;
+                "
+                >Night</span
+              >
+            </div>
+          </header>
+          <div
+            style="
+              flex: 1;
+              border-radius: 20px;
+              background: linear-gradient(135deg, #7ecb7b, #2d5d2f 60%);
+              border: 2px solid rgba(255, 255, 255, 0.2);
+              position: relative;
+              overflow: hidden;
+            "
+          >
+            <div
+              style="
+                position: absolute;
+                inset: 20px;
+                border-radius: 12px;
+                border: 1px dashed rgba(255, 255, 255, 0.5);
+                background: rgba(0, 0, 0, 0.15);
+                display: grid;
+                grid-template-columns: repeat(5, 1fr);
+                grid-template-rows: repeat(5, 1fr);
+                gap: 4px;
+              "
+            ></div>
+            <div
+              style="
+                position: absolute;
+                right: 40px;
+                top: 40px;
+                padding: 4px 10px;
+                border-radius: 10px;
+                background: rgba(0, 0, 0, 0.5);
+                font-size: 0.7rem;
+                letter-spacing: 0.2em;
+              "
+            >
+              Currently: Valley
+            </div>
+            <div
+              style="
+                position: absolute;
+                left: 40px;
+                bottom: 40px;
+                display: flex;
+                gap: 8px;
+                font-size: 0.75rem;
+              "
+            >
+              <span
+                style="
+                  padding: 6px 12px;
+                  border-radius: 10px;
+                  background: rgba(63, 122, 60, 0.9);
+                "
+                >Safe</span
+              >
+              <span
+                style="
+                  padding: 6px 12px;
+                  border-radius: 10px;
+                  background: rgba(161, 220, 96, 0.9);
+                "
+                >Calm</span
+              >
+            </div>
+          </div>
+          <div style="margin-top: 16px; display: flex; gap: 12px">
+            <div
+              style="
+                flex: 1;
+                border-radius: 16px;
+                background: rgba(255, 255, 255, 0.05);
+                padding: 12px;
+                border: 1px solid rgba(255, 255, 255, 0.1);
+              "
+            >
+              <p
+                style="
+                  margin: 0;
+                  font-size: 0.75rem;
+                  letter-spacing: 0.2em;
+                  color: #c1ffd8;
+                "
+              >
+                Active Geodata
+              </p>
+              <strong style="font-size: 1rem"
+                >Rivers, Mines, and Shelters</strong
+              >
+            </div>
+            <div
+              style="
+                flex: 1;
+                border-radius: 16px;
+                background: rgba(255, 255, 255, 0.05);
+                padding: 12px;
+                border: 1px solid rgba(255, 255, 255, 0.1);
+              "
+            >
+              <p
+                style="
+                  margin: 0;
+                  font-size: 0.75rem;
+                  letter-spacing: 0.2em;
+                  color: #c1ffd8;
+                "
+              >
+                Coordinates
+              </p>
+              <strong style="font-size: 1rem">X: 48 / Y: 32</strong>
+            </div>
+          </div>
+        </section>
+        <section
+          style="width: 320px; display: flex; flex-direction: column; gap: 12px"
+        >
+          <header
+            style="
+              padding: 12px 16px;
+              border-radius: 16px;
+              background: rgba(15, 50, 15, 0.9);
+              border: 2px solid #4fd974;
+            "
+          >
+            <h3 style="margin: 0; font-size: 1rem; letter-spacing: 0.15em">
+              Quest Log
+            </h3>
+            <p style="margin: 4px 0 0; font-size: 0.75rem; color: #c1ffd8">
+              Priority quests of the realm
+            </p>
+          </header>
+          <div
+            style="
+              flex: 1;
+              display: flex;
+              flex-direction: column;
+              gap: 10px;
+              overflow-y: auto;
+              padding-right: 4px;
+            "
+          >
+            <article
+              style="
+                border-radius: 14px;
+                padding: 10px;
+                background: rgba(255, 255, 255, 0.1);
+                border: 1px solid rgba(255, 255, 255, 0.2);
+              "
+            >
+              <h4 style="margin: 0; font-size: 0.9rem">
+                Forge the Skyforge Key
+              </h4>
+              <p style="margin: 4px 0 0; font-size: 0.75rem; color: #d9ebd9">
+                Gather prism ore from Storm peaks.
+              </p>
+              <div
+                style="
+                  margin-top: 6px;
+                  display: flex;
+                  gap: 6px;
+                  font-size: 0.7rem;
+                "
+              >
+                <span
+                  style="
+                    padding: 4px 8px;
+                    border-radius: 8px;
+                    background: #4fd974;
+                  "
+                  >Tier 2</span
+                >
+                <span
+                  style="
+                    padding: 4px 8px;
+                    border-radius: 8px;
+                    background: #ffd36b;
+                  "
+                  >Time 12m</span
+                >
+              </div>
+            </article>
+            <article
+              style="
+                border-radius: 14px;
+                padding: 10px;
+                background: rgba(255, 255, 255, 0.1);
+                border: 1px solid rgba(255, 255, 255, 0.2);
+              "
+            >
+              <h4 style="margin: 0; font-size: 0.9rem">
+                Scout the Ember Grove
+              </h4>
+              <p style="margin: 4px 0 0; font-size: 0.75rem; color: #d9ebd9">
+                Unlock the ancient warp gate.
+              </p>
+              <div
+                style="
+                  margin-top: 6px;
+                  display: flex;
+                  gap: 6px;
+                  font-size: 0.7rem;
+                "
+              >
+                <span
+                  style="
+                    padding: 4px 8px;
+                    border-radius: 8px;
+                    background: #b9c3ff;
+                  "
+                  >Tier 3</span
+                >
+                <span
+                  style="
+                    padding: 4px 8px;
+                    border-radius: 8px;
+                    background: #ffd36b;
+                  "
+                  >Time 22m</span
+                >
+              </div>
+            </article>
+            <article
+              style="
+                border-radius: 14px;
+                padding: 10px;
+                background: rgba(255, 255, 255, 0.1);
+                border: 1px solid rgba(255, 255, 255, 0.2);
+              "
+            >
+              <h4 style="margin: 0; font-size: 0.9rem">
+                Rescue the Prism Miners
+              </h4>
+              <p style="margin: 4px 0 0; font-size: 0.75rem; color: #d9ebd9">
+                Escort caravans through hollow cliffs.
+              </p>
+              <div
+                style="
+                  margin-top: 6px;
+                  display: flex;
+                  gap: 6px;
+                  font-size: 0.7rem;
+                "
+              >
+                <span
+                  style="
+                    padding: 4px 8px;
+                    border-radius: 8px;
+                    background: #f88d5f;
+                  "
+                  >Tier 1</span
+                >
+                <span
+                  style="
+                    padding: 4px 8px;
+                    border-radius: 8px;
+                    background: #ffd36b;
+                  "
+                  >Time 8m</span
+                >
+              </div>
+            </article>
+            <article
+              style="
+                border-radius: 14px;
+                padding: 10px;
+                background: rgba(255, 255, 255, 0.1);
+                border: 1px solid rgba(255, 255, 255, 0.2);
+              "
+            >
+              <h4 style="margin: 0; font-size: 0.9rem">
+                Illuminate the Crystal Falls
+              </h4>
+              <p style="margin: 4px 0 0; font-size: 0.75rem; color: #d9ebd9">
+                Ignite lanterns to reveal hidden path.
+              </p>
+              <div
+                style="
+                  margin-top: 6px;
+                  display: flex;
+                  gap: 6px;
+                  font-size: 0.7rem;
+                "
+              >
+                <span
+                  style="
+                    padding: 4px 8px;
+                    border-radius: 8px;
+                    background: #a9f0ff;
+                  "
+                  >Tier 2</span
+                >
+                <span
+                  style="
+                    padding: 4px 8px;
+                    border-radius: 8px;
+                    background: #ffd36b;
+                  "
+                  >Time 16m</span
+                >
+              </div>
+            </article>
+            <article
+              style="
+                border-radius: 14px;
+                padding: 10px;
+                background: rgba(255, 255, 255, 0.1);
+                border: 1px solid rgba(255, 255, 255, 0.2);
+              "
+            >
+              <h4 style="margin: 0; font-size: 0.9rem">
+                Deliver the Skyward Letters
+              </h4>
+              <p style="margin: 4px 0 0; font-size: 0.75rem; color: #d9ebd9">
+                Use glider to cross glittering rooftops.
+              </p>
+              <div
+                style="
+                  margin-top: 6px;
+                  display: flex;
+                  gap: 6px;
+                  font-size: 0.7rem;
+                "
+              >
+                <span
+                  style="
+                    padding: 4px 8px;
+                    border-radius: 8px;
+                    background: #d1a7ff;
+                  "
+                  >Tier 3</span
+                >
+                <span
+                  style="
+                    padding: 4px 8px;
+                    border-radius: 8px;
+                    background: #ffd36b;
+                  "
+                  >Time 30m</span
+                >
+              </div>
+            </article>
+            <article
+              style="
+                border-radius: 14px;
+                padding: 10px;
+                background: rgba(255, 255, 255, 0.1);
+                border: 1px solid rgba(255, 255, 255, 0.2);
+              "
+            >
+              <h4 style="margin: 0; font-size: 0.9rem">Guardian Beacon</h4>
+              <p style="margin: 4px 0 0; font-size: 0.75rem; color: #d9ebd9">
+                Light up lighthouses to skip fog storms.
+              </p>
+              <div
+                style="
+                  margin-top: 6px;
+                  display: flex;
+                  gap: 6px;
+                  font-size: 0.7rem;
+                "
+              >
+                <span
+                  style="
+                    padding: 4px 8px;
+                    border-radius: 8px;
+                    background: #7ef7ff;
+                  "
+                  >Tier 1</span
+                >
+                <span
+                  style="
+                    padding: 4px 8px;
+                    border-radius: 8px;
+                    background: #ffd36b;
+                  "
+                  >Time 6m</span
+                >
+              </div>
+              <div
+                style="
+                  display: flex;
+                  gap: 10px;
+                  margin-top: 8px;
+                  font-size: 0.7rem;
+                  color: #c1ffd8;
+                "
+              >
+                <span
+                  style="
+                    padding: 4px 8px;
+                    border-radius: 8px;
+                    border: 1px solid rgba(193, 255, 216, 0.4);
+                  "
+                  >Reward</span
+                >
+                <span
+                  style="
+                    padding: 4px 8px;
+                    border-radius: 8px;
+                    border: 1px solid rgba(255, 255, 255, 0.4);
+                  "
+                  >Bonus XP</span
+                >
+              </div>
+            </article>
+            <article
+              style="
+                border-radius: 14px;
+                padding: 10px;
+                background: rgba(255, 255, 255, 0.1);
+                border: 1px solid rgba(255, 255, 255, 0.2);
+              "
+            >
+              <h4 style="margin: 0; font-size: 0.9rem">Lost Trade Routes</h4>
+              <p style="margin: 4px 0 0; font-size: 0.75rem; color: #d9ebd9">
+                Restore supply lines via floating barges.
+              </p>
+              <div
+                style="
+                  margin-top: 6px;
+                  display: flex;
+                  gap: 6px;
+                  font-size: 0.7rem;
+                "
+              >
+                <span
+                  style="
+                    padding: 4px 8px;
+                    border-radius: 8px;
+                    background: #a5f585;
+                  "
+                  >Tier 2</span
+                >
+                <span
+                  style="
+                    padding: 4px 8px;
+                    border-radius: 8px;
+                    background: #ffd36b;
+                  "
+                  >Time 18m</span
+                >
+              </div>
+              <p style="margin: 8px 0 0; font-size: 0.7rem; color: #cfd9db">
+                Bonus: unlock mini merchant icons on map.
+              </p>
+            </article>
+          </div>
+        </section>
+      </main>
+      <footer
+        style="
+          position: absolute;
+          left: 200px;
+          right: 200px;
+          bottom: 20px;
+          border-radius: 24px;
+          background: rgba(19, 54, 19, 0.9);
+          border: 3px solid #7bd06b;
+          padding: 20px;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+        "
+      >
+        <div style="display: flex; gap: 12px; align-items: center">
+          <span
+            style="
+              width: 12px;
+              height: 12px;
+              border-radius: 999px;
+              background: #ffd36b;
+            "
+          ></span>
+          <p style="margin: 0; font-size: 0.8rem">Status: Map synced</p>
+          <p style="margin: 0; font-size: 0.8rem">
+            Legend: <span style="color: #a5ffd1">Safe</span> ·
+            <span style="color: #ffd36b">Neutral</span> ·
+            <span style="color: #f86b4b">Hostile</span>
+          </p>
+        </div>
+        <div style="display: flex; gap: 10px; font-size: 0.75rem">
+          <span
+            style="
+              padding: 6px 12px;
+              border-radius: 10px;
+              border: 1px solid #8ff0a2;
+            "
+            >Waypoints 12</span
+          >
+          <span
+            style="
+              padding: 6px 12px;
+              border-radius: 10px;
+              border: 1px solid #ffd26a;
+            "
+            >Quests 5</span
+          >
+          <span
+            style="
+              padding: 6px 12px;
+              border-radius: 10px;
+              border: 1px solid #ff745a;
+            "
+            >Enemies 2</span
+          >
+        </div>
+      </footer>
+    </div>
+  </body>
+</html>

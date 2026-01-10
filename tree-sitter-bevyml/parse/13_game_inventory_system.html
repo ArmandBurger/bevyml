@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Mythic Inventory</title>
+  </head>
+  <body
+    style="
+      margin: 0;
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      background: #0e0f19;
+      color: #ecf2ff;
+      height: 100vh;
+      overflow: hidden;
+    "
+  >
+    <div
+      style="
+        display: flex;
+        height: 100vh;
+        background: #0b0c15;
+        border: 6px solid #1b1f35;
+        overflow: hidden;
+      "
+    >
+      <aside
+        style="
+          flex: 0 0 260px;
+          padding: 20px;
+          border-right: 2px solid #242b45;
+          display: flex;
+          flex-direction: column;
+          gap: 16px;
+          background: linear-gradient(180deg, #14182f, #0a0d1d);
+          min-height: 0;
+          overflow: auto;
+        "
+      >
+        <header style="display: flex; flex-direction: column; gap: 6px">
+          <h2 style="margin: 0; font-size: 1.1rem; letter-spacing: 0.2em">
+            EQUIPMENT
+          </h2>
+          <p style="margin: 0; font-size: 0.85rem; color: #9fb3e6">
+            Slot loadout alpha
+          </p>
+        </header>
+        <div style="display: flex; flex-direction: column; gap: 10px">
+          <div
+            style="
+              display: flex;
+              justify-content: space-between;
+              padding: 10px;
+              border-radius: 12px;
+              border: 1px solid #2e385d;
+              background: #0b1022;
+            "
+          >
+            <span>Sword</span>
+            <span style="color: #6ff0b0">+12</span>
+          </div>
+          <div
+            style="
+              display: flex;
+              justify-content: space-between;
+              padding: 10px;
+              border-radius: 12px;
+              border: 1px solid #2e385d;
+              background: #0b1022;
+            "
+          >
+            <span>Shield</span>
+            <span style="color: #8dd6ff">+8</span>
+          </div>
+          <div
+            style="
+              display: flex;
+              justify-content: space-between;
+              padding: 10px;
+              border-radius: 12px;
+              border: 1px solid #2e385d;
+              background: #0b1022;
+            "
+          >
+            <span>Helmet</span>
+            <span style="color: #efb24d">+6</span>
+          </div>
+          <div
+            style="
+              display: flex;
+              justify-content: space-between;
+              padding: 10px;
+              border-radius: 12px;
+              border: 1px solid #2e385d;
+              background: #0b1022;
+            "
+          >
+            <span>Armor</span>
+            <span style="color: #ff976b">+20</span>
+          </div>
+          <div
+            style="
+              display: flex;
+              justify-content: space-between;
+              padding: 10px;
+              border-radius: 12px;
+              border: 1px solid #2e385d;
+              background: #0b1022;
+            "
+          >
+            <span>Boots</span>
+            <span style="color: #cda6ff">+5</span>
+          </div>
+          <div
+            style="
+              display: flex;
+              justify-content: space-between;
+              padding: 10px;
+              border-radius: 12px;
+              border: 1px solid #2e385d;
+              background: #0b1022;
+            "
+          >
+            <span>Gloves</span>
+            <span style="color: #a3ff94">+4</span>
+          </div>
+          <div
+            style="
+              display: flex;
+              justify-content: space-between;
+              padding: 10px;
+              border-radius: 12px;
+              border: 1px solid #2e385d;
+              background: #0b1022;
+            "
+          >
+            <span>Cape</span>
+            <span style="color: #5ef3ff">+3</span>
+          </div>
+          <div
+            style="
+              display: flex;
+              justify-content: space-between;
+              padding: 10px;
+              border-radius: 12px;
+              border: 1px solid #2e385d;
+              background: #0b1022;
+            "
+          >
+            <span>Ring</span>
+            <span style="color: #ffd16c">+2</span>
+          </div>
+        </div>
+        <section
+          style="
+            margin-top: auto;
+            border-top: 1px solid #1f2745;
+            padding-top: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+          "
+        >
+          <h3 style="margin: 0; font-size: 0.9rem; letter-spacing: 0.2em">
+            BUFFS
+          </h3>
+          <ul
+            style="
+              margin: 0;
+              padding: 0;
+              list-style: none;
+              display: flex;
+              flex-direction: column;
+              gap: 4px;
+              font-size: 0.8rem;
+            "
+          >
+            <li
+              style="
+                padding: 6px 8px;
+                border-radius: 6px;
+                background: #091126;
+                border: 1px solid #162040;
+              "
+            >
+              Flame Ward - Active
+            </li>
+            <li
+              style="
+                padding: 6px 8px;
+                border-radius: 6px;
+                background: #091126;
+                border: 1px solid #162040;
+              "
+            >
+              Gale Surge - 3m
+            </li>
+            <li
+              style="
+                padding: 6px 8px;
+                border-radius: 6px;
+                background: #091126;
+                border: 1px solid #162040;
+              "
+            >
+              Iron Veil - Charged
+            </li>
+            <li
+              style="
+                padding: 6px 8px;
+                border-radius: 6px;
+                background: #091126;
+                border: 1px solid #162040;
+              "
+            >
+              Oracle Sight - Ready
+            </li>
+          </ul>
+        </section>
+      </aside>
+
+      <main
+        style="
+          flex: 1;
+          display: flex;
+          flex-direction: column;
+          padding: 24px;
+          gap: 18px;
+          overflow: hidden;
+          min-height: 0;
+        "
+      >
+        <section
+          style="
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+          "
+        >
+          <div>
+            <h1 style="margin: 0; font-size: 2rem; letter-spacing: 0.2em">
+              INVENTORY GRID
+            </h1>
+            <p style="margin: 4px 0 0; font-size: 0.9rem; color: #8db0ff">
+              Grid capacity 128 / 256 slots
+            </p>
+          </div>
+          <span
+            style="
+              padding: 6px 14px;
+              border-radius: 999px;
+              border: 1px solid #4ea9ff;
+            "
+            >Sonicsync</span
+          >
+        </section>
+
+        <section
+          style="
+            flex: 1;
+            min-height: 0;
+            overflow: auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 12px;
+          "
+        >
+          <article
+            style="
+              border-radius: 14px;
+              border: 1px solid #22344f;
+              background: #0a0e1f;
+              padding: 12px;
+              min-height: 110px;
+              display: flex;
+              flex-direction: column;
+              gap: 8px;
+            "
+          >
+            <div style="display: flex; gap: 8px; align-items: center">
+              <div
+                style="
+                  width: 36px;
+                  height: 36px;
+                  border-radius: 8px;
+                  background: #1c2f5e;
+                "
+              ></div>
+              <strong>Solar Blade</strong>
+            </div>
+            <span style="font-size: 0.8rem; color: #7da2ff">Damage 42</span>
+            <span style="font-size: 0.8rem; color: #a8ffa4">Bound</span>
+          </article>
+          <article
+            style="
+              border-radius: 14px;
+              border: 1px solid #22344f;
+              background: #0a0e1f;
+              padding: 12px;
+              min-height: 110px;
+            "
+          >
+            <div
+              style="
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+              "
+            >
+              <strong>Void Orb</strong>
+              <span style="font-size: 0.8rem; color: #77f0ff">x2</span>
+            </div>
+            <p style="margin: 6px 0 0; font-size: 0.8rem; color: #cad4ff">
+              Rare mana focus
+            </p>
+          </article>
+          <article
+            style="
+              border-radius: 14px;
+              border: 1px solid #22344f;
+              background: #0a0e1f;
+              padding: 12px;
+              min-height: 110px;
+            "
+          >
+            <div style="display: flex; justify-content: space-between">
+              <strong>Dragonbone Bow</strong>
+              <span style="font-size: 0.8rem; color: #ff8aa8">Equipped</span>
+            </div>
+            <p style="margin: 6px 0 0; font-size: 0.75rem; color: #adc4e8">
+              Precise volley +3
+            </p>
+          </article>
+          <article
+            style="
+              border-radius: 14px;
+              border: 1px solid #22344f;
+              background: #0a0e1f;
+              padding: 12px;
+              min-height: 110px;
+            "
+          >
+            <div>
+              <strong>Elixir</strong>
+              <p style="margin: 4px 0 0; font-size: 0.75rem; color: #d5ffac">
+                Restores HP & MP
+              </p>
+            </div>
+            <span style="font-size: 0.8rem; color: #7ad5ff">Potion Type</span>
+          </article>
+          <article
+            style="
+              border-radius: 14px;
+              border: 1px solid #22344f;
+              background: #0a0e1f;
+              padding: 12px;
+              min-height: 110px;
+            "
+          >
+            <strong>Thunder Sigil</strong>
+            <p style="margin: 6px 0 0; font-size: 0.8rem; color: #7ad5ff">
+              +10% Shock
+            </p>
+            <span style="font-size: 0.8rem; color: #e8ff94">Untouched</span>
+          </article>
+          <article
+            style="
+              border-radius: 14px;
+              border: 1px solid #22344f;
+              background: #0a0e1f;
+              padding: 12px;
+              min-height: 110px;
+            "
+          >
+            <strong>Glimmer Cloak</strong>
+            <p style="margin: 6px 0 0; font-size: 0.8rem; color: #cdd6ff">
+              Invisibility weave
+            </p>
+          </article>
+          <article
+            style="
+              border-radius: 14px;
+              border: 1px solid #22344f;
+              background: #0a0e1f;
+              padding: 12px;
+              min-height: 110px;
+            "
+          >
+            <strong>Crystal Quill</strong>
+            <p style="margin: 6px 0 0; font-size: 0.8rem; color: #a3d8ff">
+              Crafting tool
+            </p>
+          </article>
+          <article
+            style="
+              border-radius: 14px;
+              border: 1px solid #22344f;
+              background: #0a0e1f;
+              padding: 12px;
+              min-height: 110px;
+            "
+          >
+            <strong>Frost Trinket</strong>
+            <p style="margin: 6px 0 0; font-size: 0.8rem; color: #c5f0ff">
+              Freeze chance +6%
+            </p>
+          </article>
+          <article
+            style="
+              border-radius: 14px;
+              border: 1px solid #22344f;
+              background: #0a0e1f;
+            "
+          >
+            <strong>Iron Shovel</strong>
+            <p style="margin: 6px 0 0; font-size: 0.8rem; color: #a2afb9">
+              Gather tool
+            </p>
+          </article>
+          <article
+            style="
+              border-radius: 14px;
+              border: 1px solid #22344f;
+              background: #0a0e1f;
+            "
+          >
+            <strong>Mystery Scroll</strong>
+            <p style="margin: 6px 0 0; font-size: 0.8rem">Decoded 0%</p>
+          </article>
+          <article
+            style="
+              border-radius: 14px;
+              border: 1px solid #22344f;
+              background: #0a0e1f;
+            "
+          >
+            <strong>Gravity Boots</strong>
+            <p style="margin: 6px 0 0; font-size: 0.8rem; color: #b9ffb9">
+              Double jump
+            </p>
+          </article>
+          <article
+            style="
+              border-radius: 14px;
+              border: 1px solid #22344f;
+              background: #0a0e1f;
+            "
+          >
+            <strong>Pulse Dagger</strong>
+            <p style="margin: 6px 0 0; font-size: 0.8rem; color: #ff9fd9">
+              AP +14
+            </p>
+          </article>
+          <article
+            style="
+              border-radius: 14px;
+              border: 1px solid #22344f;
+              background: #0a0e1f;
+            "
+          >
+            <strong>Seraph Feather</strong>
+            <p style="margin: 6px 0 0; font-size: 0.8rem; color: #d9f2ff">
+              Featherfall
+            </p>
+          </article>
+          <article
+            style="
+              border-radius: 14px;
+              border: 1px solid #22344f;
+              background: #0a0e1f;
+            "
+          >
+            <strong>Meteoric Ore</strong>
+            <p style="margin: 6px 0 0; font-size: 0.8rem">Rare resource</p>
+          </article>
+          <article
+            style="
+              border-radius: 14px;
+              border: 1px solid #22344f;
+              background: #0a0e1f;
+            "
+          >
+            <strong>Runed Bracelet</strong>
+            <p style="margin: 6px 0 0; font-size: 0.8rem; color: #f1ffac">
+              Hex slot
+            </p>
+          </article>
+          <article
+            style="
+              border-radius: 14px;
+              border: 1px solid #22344f;
+              background: #0a0e1f;
+            "
+          >
+            <strong>Storm Coil</strong>
+            <p style="margin: 6px 0 0; font-size: 0.8rem">Charge 30%</p>
+          </article>
+          <article
+            style="
+              border-radius: 14px;
+              border: 1px solid #22344f;
+              background: #0a0e1f;
+            "
+          >
+            <strong>Moonstone</strong>
+            <p style="margin: 6px 0 0; font-size: 0.8rem">Phasing</p>
+          </article>
+          <article
+            style="
+              border-radius: 14px;
+              border: 1px solid #22344f;
+              background: #0a0e1f;
+            "
+          >
+            <strong>Lantern</strong>
+            <p style="margin: 6px 0 0; font-size: 0.8rem">Illuminates caves</p>
+          </article>
+          <article
+            style="
+              border-radius: 14px;
+              border: 1px solid #22344f;
+              background: #0a0e1f;
+            "
+          >
+            <strong>Hawk Totem</strong>
+            <p style="margin: 6px 0 0; font-size: 0.8rem">+12 vision</p>
+          </article>
+          <article style="border-radius: 14px; border: 1px solid #22344f">
+            <strong>Map Scroll</strong>
+            <p style="margin: 6px 0 0; font-size: 0.8rem">Reveals ways</p>
+          </article>
+          <article style="border-radius: 14px; border: 1px solid #22344f">
+            <strong>Petal Dye</strong>
+            <p style="margin: 6px 0 0; font-size: 0.8rem">Cosmetic</p>
+          </article>
+          <article style="border-radius: 14px; border: 1px solid #22344f">
+            <strong>Wind Charm</strong>
+            <p style="margin: 6px 0 0; font-size: 0.8rem">Speed boost</p>
+          </article>
+        </section>
+      </main>
+
+      <section
+        style="
+          flex: 0 0 280px;
+          border-left: 2px solid #242b45;
+          padding: 24px;
+          display: flex;
+          flex-direction: column;
+          gap: 18px;
+          background: linear-gradient(180deg, #0b101f, #05060d);
+          min-height: 0;
+          overflow: auto;
+        "
+      >
+        <div>
+          <h2 style="margin: 0; font-size: 1.1rem; letter-spacing: 0.2em">
+            CHARACTER
+          </h2>
+          <p style="margin: 4px 0 0; font-size: 0.85rem; color: #8fb1ff">
+            Stat aggregates
+          </p>
+        </div>
+        <ul
+          style="
+            margin: 0;
+            padding: 0;
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            font-size: 0.9rem;
+          "
+        >
+          <li style="display: flex; flex-direction: column; gap: 4px">
+            <span style="display: flex; justify-content: space-between"
+              ><strong>Vitality</strong><span>128</span></span
+            >
+            <div style="height: 10px; border-radius: 6px; background: #03060f">
+              <div
+                style="
+                  width: 78%;
+                  height: 100%;
+                  border-radius: 6px;
+                  background: linear-gradient(90deg, #ff7b7b, #ffb347);
+                "
+              ></div>
+            </div>
+          </li>
+          <li style="display: flex; flex-direction: column; gap: 4px">
+            <span style="display: flex; justify-content: space-between"
+              ><strong>Agility</strong><span>102</span></span
+            >
+            <div style="height: 10px; border-radius: 6px; background: #03060f">
+              <div
+                style="
+                  width: 65%;
+                  height: 100%;
+                  border-radius: 6px;
+                  background: linear-gradient(90deg, #58dbff, #1f7cff);
+                "
+              ></div>
+            </div>
+          </li>
+          <li style="display: flex; flex-direction: column; gap: 4px">
+            <span style="display: flex; justify-content: space-between"
+              ><strong>Mind</strong><span>94</span></span
+            >
+            <div style="height: 10px; border-radius: 6px; background: #03060f">
+              <div
+                style="
+                  width: 71%;
+                  height: 100%;
+                  border-radius: 6px;
+                  background: linear-gradient(90deg, #d9ff9c, #60ffb5);
+                "
+              ></div>
+            </div>
+          </li>
+          <li style="display: flex; flex-direction: column; gap: 4px">
+            <span style="display: flex; justify-content: space-between"
+              ><strong>Fortune</strong><span>58</span></span
+            >
+            <div style="height: 10px; border-radius: 6px; background: #03060f">
+              <div
+                style="
+                  width: 45%;
+                  height: 100%;
+                  border-radius: 6px;
+                  background: linear-gradient(90deg, #ffed60, #ff9d60);
+                "
+              ></div>
+            </div>
+          </li>
+        </ul>
+        <article
+          style="
+            padding: 14px;
+            border-radius: 16px;
+            background: #02030b;
+            border: 1px solid #11162a;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+          "
+        >
+          <span
+            style="font-size: 0.75rem; letter-spacing: 0.3em; color: #7ab6ff"
+            >QUEST LOG</span
+          >
+          <p style="margin: 0; font-size: 0.8rem; line-height: 1.4">
+            Retrieve the Celestial Keystone from the mist ruins and return it to
+            Archmage Hara before dusk.
+          </p>
+          <p style="margin: 0; font-size: 0.8rem; line-height: 1.4">
+            Secure 6 Storm Crystals and transport them in the reinforced satchel
+            to prevent energy leakage.
+          </p>
+        </article>
+      </section>
+    </div>
+  </body>
+</html>

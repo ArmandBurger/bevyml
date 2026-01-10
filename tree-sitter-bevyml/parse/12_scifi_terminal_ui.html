@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Scifi Terminal UI</title>
+  </head>
+  <body
+    style="
+      margin: 0;
+      font-family: 'Space Mono', 'Roboto Mono', monospace;
+      background: #03030b;
+      color: #d9e6ff;
+      height: 100vh;
+      overflow: hidden;
+    "
+  >
+    <div
+      style="
+        display: flex;
+        flex-direction: column;
+        height: 100vh;
+        border: 6px solid #0a0c1a;
+        box-shadow: 0 0 50px rgba(0, 0, 0, 0.85);
+        background: linear-gradient(180deg, #05102b, #0b0b17);
+        overflow: hidden;
+      "
+    >
+      <header
+        style="
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          padding: 16px 32px;
+          border-bottom: 2px solid #112244;
+          background: rgba(2, 3, 14, 0.95);
+          backdrop-filter: blur(12px);
+        "
+      >
+        <div>
+          <h1 style="margin: 0; font-size: 1.8rem; letter-spacing: 0.2em">
+            ODIN TERMINAL
+          </h1>
+          <p style="margin: 2px 0 0; font-size: 0.85rem; color: #7fb1ff">
+            Monitoring core interlocks · SYS:9
+          </p>
+        </div>
+        <div style="display: flex; gap: 12px; align-items: center">
+          <div
+            style="
+              width: 16px;
+              height: 16px;
+              border-radius: 50%;
+              background: #6bff7f;
+              box-shadow: 0 0 6px rgba(107, 255, 127, 0.9);
+            "
+          ></div>
+          <div
+            style="
+              width: 16px;
+              height: 16px;
+              border-radius: 50%;
+              background: #ffb66b;
+              box-shadow: 0 0 6px rgba(255, 182, 107, 0.9);
+            "
+          ></div>
+          <div
+            style="
+              width: 16px;
+              height: 16px;
+              border-radius: 50%;
+              background: #ff6b85;
+              box-shadow: 0 0 6px rgba(255, 107, 133, 0.9);
+            "
+          ></div>
+        </div>
+      </header>
+
+      <main
+        style="
+          flex: 1;
+          display: flex;
+          padding: 24px;
+          gap: 20px;
+          overflow: auto;
+          min-height: 0;
+        "
+      >
+        <section
+          style="
+            flex: 1;
+            background: rgba(7, 15, 30, 0.8);
+            border: 1px solid #1d2a45;
+            border-radius: 20px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+          "
+        >
+          <div
+            style="
+              display: flex;
+              justify-content: space-between;
+              align-items: center;
+              margin-bottom: 12px;
+            "
+          >
+            <span
+              style="font-size: 0.9rem; letter-spacing: 0.3em; color: #7ab6ff"
+              >COMMAND LOG</span
+            >
+            <span style="font-size: 0.75rem; color: #c5e1ff"
+              >Realtime streaming</span
+            >
+          </div>
+          <div
+            style="
+              flex: 1;
+              display: flex;
+              flex-direction: column;
+              gap: 10px;
+              padding-right: 12px;
+            "
+          >
+            <p
+              style="
+                margin: 0;
+                background: #0b1324;
+                padding: 12px;
+                border-radius: 10px;
+                border: 1px solid #1f2c44;
+                box-shadow: inset 0 0 12px rgba(0, 0, 0, 0.6);
+              "
+            >
+              [00:00:01] Synapse handshake confirmed · pulse 0.878
+            </p>
+            <p
+              style="
+                margin: 0;
+                background: #0b1324;
+                padding: 12px;
+                border-radius: 10px;
+                border: 1px solid #1f2c44;
+              "
+            >
+              [00:00:11] Relay array alpha queued 12 waveforms
+            </p>
+            <p
+              style="
+                margin: 0;
+                background: #0b1324;
+                padding: 12px;
+                border-radius: 10px;
+                border: 1px solid #1f2c44;
+              "
+            >
+              [00:00:23] Thermal coil setpoint tuned · ambient 14.2°C
+            </p>
+            <p
+              style="
+                margin: 0;
+                background: #0b1324;
+                padding: 12px;
+                border-radius: 10px;
+                border: 1px solid #1f2c44;
+              "
+            >
+              [00:00:37] Horizon grid rebalanced to 12.5° yaw
+            </p>
+            <p
+              style="
+                margin: 0;
+                background: #0b1324;
+                padding: 12px;
+                border-radius: 10px;
+                border: 1px solid #1f2c44;
+              "
+            >
+              [00:00:49] Cascade filter online with 6 backup nodes
+            </p>
+            <p
+              style="
+                margin: 0;
+                background: #0b1324;
+                padding: 12px;
+                border-radius: 10px;
+                border: 1px solid #1f2c44;
+              "
+            >
+              [00:01:04] Quantum overlay recalculating star paths
+            </p>
+            <p
+              style="
+                margin: 0;
+                background: #0b1324;
+                padding: 12px;
+                border-radius: 10px;
+                border: 1px solid #1f2c44;
+              "
+            >
+              [00:01:16] Mission archive user 108 logged remote override
+            </p>
+            <p
+              style="
+                margin: 0;
+                background: #0b1324;
+                padding: 12px;
+                border-radius: 10px;
+                border: 1px solid #1f2c44;
+              "
+            >
+              [00:01:30] Auxiliary feed switched to core telemetry
+            </p>
+            <p
+              style="
+                margin: 0;
+                background: #0b1324;
+                padding: 12px;
+                border-radius: 10px;
+                border: 1px solid #1f2c44;
+              "
+            >
+              [00:01:42] Transit lanes 4-6 throttled to 0.6 coefficient
+            </p>
+            <p
+              style="
+                margin: 0;
+                background: #0b1324;
+                padding: 12px;
+                border-radius: 10px;
+                border: 1px solid #1f2c44;
+              "
+            >
+              [00:01:56] Generator array beta reporting 3 anomalies
+            </p>
+            <p
+              style="
+                margin: 0;
+                background: #0b1324;
+                padding: 12px;
+                border-radius: 10px;
+                border: 1px solid #1f2c44;
+              "
+            >
+              [00:02:03] Lockdown sequence engaged in sector 33
+            </p>
+            <p
+              style="
+                margin: 0;
+                background: #0b1324;
+                padding: 12px;
+                border-radius: 10px;
+                border: 1px solid #1f2c44;
+              "
+            >
+              [00:02:28] Data lake sync 74% · integrity passes passing
+            </p>
+            <p
+              style="
+                margin: 0;
+                background: #0b1324;
+                padding: 12px;
+                border-radius: 10px;
+                border: 1px solid #1f2c44;
+              "
+            >
+              [00:02:45] Litho printer ready for structural repairs
+            </p>
+            <p
+              style="
+                margin: 0;
+                background: #0b1324;
+                padding: 12px;
+                border-radius: 10px;
+                border: 1px solid #1f2c44;
+              "
+            >
+              [00:02:59] Atmosphere scrubbers stable at 92%
+            </p>
+            <p
+              style="
+                margin: 0;
+                background: #0b1324;
+                padding: 12px;
+                border-radius: 10px;
+                border: 1px solid #1f2c44;
+              "
+            >
+              [00:03:10] Filtered logs archived for audit
+            </p>
+          </div>
+        </section>
+        <section
+          style="flex: 1; display: flex; flex-direction: column; gap: 16px"
+        >
+          <div
+            style="
+              display: flex;
+              flex-direction: column;
+              gap: 14px;
+              background: rgba(4, 6, 18, 0.9);
+              border-radius: 18px;
+              padding: 18px;
+              border: 1px solid #1f2f4f;
+              box-shadow: 0 0 22px rgba(0, 0, 0, 0.6);
+            "
+          >
+            <div
+              style="
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+              "
+            >
+              <div>
+                <h2 style="margin: 0; font-size: 1.2rem; letter-spacing: 0.1em">
+                  Systems Overview
+                </h2>
+                <p style="margin: 4px 0 0; font-size: 0.85rem; color: #81b7ff">
+                  Stacked intelligence matrices
+                </p>
+              </div>
+              <span
+                style="
+                  padding: 6px 12px;
+                  background: #0f1b2e;
+                  border-radius: 999px;
+                  border: 1px solid #3a5690;
+                "
+                >LIVE</span
+              >
+            </div>
+            <div style="display: flex; gap: 12px; flex-wrap: wrap">
+              <div
+                style="
+                  flex: 1 1 140px;
+                  min-width: 120px;
+                  padding: 10px;
+                  border-radius: 10px;
+                  background: #081127;
+                  border: 1px solid #1c2a47;
+                "
+              >
+                <h3
+                  style="
+                    margin: 0;
+                    font-size: 0.85rem;
+                    text-transform: uppercase;
+                  "
+                >
+                  Pulse
+                </h3>
+                <p style="margin: 6px 0 0; font-size: 1.6rem">0.98</p>
+                <span style="font-size: 0.75rem; color: #61ffcc">Stable</span>
+              </div>
+              <div
+                style="
+                  flex: 1 1 140px;
+                  min-width: 120px;
+                  padding: 10px;
+                  border-radius: 10px;
+                  background: #081127;
+                  border: 1px solid #1c2a47;
+                "
+              >
+                <h3
+                  style="
+                    margin: 0;
+                    font-size: 0.85rem;
+                    text-transform: uppercase;
+                  "
+                >
+                  AI load
+                </h3>
+                <p style="margin: 6px 0 0; font-size: 1.6rem">74%</p>
+                <span style="font-size: 0.75rem; color: #7ad9ff"
+                  >Optimized</span
+                >
+              </div>
+              <div
+                style="
+                  flex: 1 1 140px;
+                  min-width: 120px;
+                  padding: 10px;
+                  border-radius: 10px;
+                  background: #081127;
+                  border: 1px solid #1c2a47;
+                "
+              >
+                <h3
+                  style="
+                    margin: 0;
+                    font-size: 0.85rem;
+                    text-transform: uppercase;
+                  "
+                >
+                  Integrity
+                </h3>
+                <p style="margin: 6px 0 0; font-size: 1.6rem">99.4%</p>
+                <span style="font-size: 0.75rem; color: #ffea4f">Green</span>
+              </div>
+            </div>
+          </div>
+          <div style="display: flex; gap: 14px; flex: 1">
+            <div
+              style="
+                flex: 1;
+                display: flex;
+                flex-direction: column;
+                gap: 12px;
+                border-radius: 18px;
+                padding: 18px;
+                background: rgba(5, 8, 20, 0.9);
+                border: 1px solid #1a2442;
+                overflow: hidden;
+                box-shadow: inset 0 0 30px rgba(5, 8, 20, 0.4);
+              "
+            >
+              <h3 style="margin: 0; font-size: 1rem">Information Panels</h3>
+              <div
+                style="
+                  flex: 1;
+                  background: #060b18;
+                  border-radius: 12px;
+                  padding: 12px;
+                  border: 1px solid #0e1a32;
+                  display: flex;
+                  flex-direction: column;
+                  gap: 8px;
+                  overflow: auto;
+                "
+              >
+                <div
+                  style="
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                  "
+                >
+                  <span style="font-size: 0.75rem; color: #9ab4ff"
+                    >Power Segments</span
+                  >
+                  <span style="font-size: 0.7rem; color: #6ef1ff"
+                    >48ms update</span
+                  >
+                </div>
+                <ul
+                  style="
+                    list-style: none;
+                    padding: 0;
+                    margin: 0;
+                    display: flex;
+                    flex-direction: column;
+                    gap: 6px;
+                  "
+                >
+                  <li
+                    style="
+                      display: flex;
+                      justify-content: space-between;
+                      font-size: 0.8rem;
+                    "
+                  >
+                    <strong>Node A1</strong>
+                    <span>76W</span>
+                  </li>
+                  <li
+                    style="
+                      display: flex;
+                      justify-content: space-between;
+                      font-size: 0.8rem;
+                    "
+                  >
+                    <strong>Node B4</strong>
+                    <span>64W</span>
+                  </li>
+                  <li
+                    style="
+                      display: flex;
+                      justify-content: space-between;
+                      font-size: 0.8rem;
+                    "
+                  >
+                    <strong>Node C7</strong>
+                    <span>82W</span>
+                  </li>
+                  <li
+                    style="
+                      display: flex;
+                      justify-content: space-between;
+                      font-size: 0.8rem;
+                    "
+                  >
+                    <strong>Node D2</strong>
+                    <span>59W</span>
+                  </li>
+                </ul>
+                <div style="display: flex; gap: 10px">
+                  <span
+                    style="
+                      flex: 1;
+                      padding: 8px;
+                      border-radius: 8px;
+                      background: #081127;
+                      border: 1px solid #1b2c4d;
+                    "
+                    >Stable</span
+                  >
+                  <span
+                    style="
+                      flex: 1;
+                      padding: 8px;
+                      border-radius: 8px;
+                      background: #081127;
+                      border: 1px solid #1b2c4d;
+                    "
+                    >Synced</span
+                  >
+                </div>
+              </div>
+            </div>
+            <div
+              style="
+                flex: 1;
+                display: flex;
+                flex-direction: column;
+                gap: 12px;
+                border-radius: 18px;
+                padding: 18px;
+                background: rgba(5, 8, 20, 0.9);
+                border: 1px solid #1a2442;
+              "
+            >
+              <div
+                style="
+                  flex: 1;
+                  display: flex;
+                  flex-direction: column;
+                  gap: 10px;
+                  background: #06090f;
+                  border-radius: 14px;
+                  padding: 12px;
+                  border: 1px solid #0f1a2e;
+                "
+              >
+                <h3 style="margin: 0; font-size: 1rem">Alert Clusters</h3>
+                <ol
+                  style="
+                    margin: 0;
+                    padding-left: 18px;
+                    display: flex;
+                    flex-direction: column;
+                    gap: 6px;
+                    font-size: 0.8rem;
+                  "
+                >
+                  <li>
+                    Cluster Omega · Noise heating
+                    <span style="color: #ff5f60">Minor</span>
+                  </li>
+                  <li>
+                    Cluster Sigma · Buffer low
+                    <span style="color: #ffc84b">Watch</span>
+                  </li>
+                  <li>
+                    Cluster Delta · Wind surge
+                    <span style="color: #6ef1ff">Stable</span>
+                  </li>
+                </ol>
+              </div>
+              <div
+                style="
+                  flex: 1;
+                  display: flex;
+                  flex-direction: column;
+                  gap: 8px;
+                  background: #06090f;
+                  border-radius: 14px;
+                  padding: 12px;
+                  border: 1px solid #0f1a2e;
+                "
+              >
+                <h3 style="margin: 0; font-size: 1rem">Telemetry Bloom</h3>
+                <span style="font-size: 0.85rem; color: #cdd7ff"
+                  >Encapsulation metrics trending positive.</span
+                >
+                <div style="display: flex; gap: 10px; flex-wrap: wrap">
+                  <span
+                    style="
+                      flex: 1;
+                      min-width: 120px;
+                      padding: 10px;
+                      border-radius: 10px;
+                      background: #0b1e38;
+                      border: 1px solid #224370;
+                    "
+                    >Lat 0.6ms</span
+                  >
+                  <span
+                    style="
+                      flex: 1;
+                      min-width: 120px;
+                      padding: 10px;
+                      border-radius: 10px;
+                      background: #0b1e38;
+                      border: 1px solid #224370;
+                    "
+                    >Jitter 0.02ms</span
+                  >
+                  <span
+                    style="
+                      flex: 1;
+                      min-width: 120px;
+                      padding: 10px;
+                      border-radius: 10px;
+                      background: #0b1e38;
+                      border: 1px solid #224370;
+                    "
+                    >Drift 0.001</span
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 12px">
+            <h3 style="margin: 0; font-size: 1rem">Narrative Panel</h3>
+            <div
+              style="
+                background: #06090f;
+                border-radius: 14px;
+                padding: 16px;
+                border: 1px solid #0f1a2e;
+                display: flex;
+                flex-direction: column;
+                gap: 10px;
+              "
+            >
+              <p
+                style="
+                  margin: 0;
+                  font-size: 0.85rem;
+                  line-height: 1.4;
+                  color: #cdd7ff;
+                "
+              >
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                Vestibulum vitae purus a risus semper volutpat. Sed bibendum,
+                nisl nec facilisis sodales, turpis magna tempus urna, sed
+                venenatis ligula arcu ac mi.
+              </p>
+              <p
+                style="
+                  margin: 0;
+                  font-size: 0.85rem;
+                  line-height: 1.4;
+                  color: #cdd7ff;
+                "
+              >
+                Pellentesque habitant morbi tristique senectus et netus et
+                malesuada fames ac turpis egestas. Quisque fermentum justo non
+                ex congue, id venenatis nibh luctus.
+              </p>
+              <div style="display: flex; gap: 12px; flex-wrap: wrap">
+                <span
+                  style="
+                    flex: 1;
+                    min-width: 180px;
+                    padding: 10px;
+                    border-radius: 10px;
+                    border: 1px solid #1f2c44;
+                    background: linear-gradient(
+                      135deg,
+                      rgba(74, 173, 255, 0.15),
+                      rgba(9, 12, 28, 0.75)
+                    );
+                  "
+                  >Nested info · vectored</span
+                >
+                <span
+                  style="
+                    flex: 1;
+                    min-width: 180px;
+                    padding: 10px;
+                    border-radius: 10px;
+                    border: 1px solid #1f2c44;
+                    background: linear-gradient(
+                      135deg,
+                      rgba(255, 127, 80, 0.15),
+                      rgba(9, 12, 28, 0.75)
+                    );
+                  "
+                  >Monospace glyphs engaged</span
+                >
+              </div>
+              <p
+                style="
+                  margin: 0;
+                  font-size: 0.85rem;
+                  line-height: 1.4;
+                  color: #cdd7ff;
+                "
+              >
+                Fusce non sapien sed metus pellentesque tempor. Curabitur
+                feugiat elit non lorem consequat, a gravida massa pretium.
+                Integer consectetur dictum urna, sed venenatis odio accumsan ac.
+              </p>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+  </body>
+</html>

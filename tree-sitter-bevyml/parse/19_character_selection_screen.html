@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Steampunk Character Select</title>
+  </head>
+  <body
+    style="
+      margin: 0;
+      font-family: 'Lora', 'Segoe UI', serif;
+      background: #1b160d;
+      color: #f8e7d7;
+      min-height: 100vh;
+    "
+  >
+    <div
+      style="
+        min-height: 100vh;
+        display: flex;
+        background: radial-gradient(circle at top right, #3b2915, #1b160d);
+      "
+    >
+      <main
+        style="
+          flex: 1;
+          display: flex;
+          flex-direction: column;
+          gap: 18px;
+          padding: 24px;
+        "
+      >
+        <div
+          style="
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+          "
+        >
+          <div>
+            <h1 style="margin: 0; font-size: 2.5rem; letter-spacing: 0.1em">
+              Character Gallery
+            </h1>
+            <p style="margin: 6px 0 0; font-size: 0.9rem; color: #d9c0a5">
+              Choose your companion before the dirigible departs.
+            </p>
+          </div>
+          <div style="display: flex; gap: 8px; align-items: center">
+            <span
+              style="
+                padding: 6px 12px;
+                border-radius: 999px;
+                border: 1px solid rgba(255, 255, 255, 0.3);
+                background: rgba(255, 204, 153, 0.15);
+                font-size: 0.8rem;
+              "
+              >Steamworks League</span
+            >
+            <span
+              style="
+                padding: 6px 12px;
+                border-radius: 999px;
+                border: 1px solid rgba(255, 255, 255, 0.3);
+                background: rgba(255, 255, 255, 0.1);
+                font-size: 0.8rem;
+              "
+              >Session 12</span
+            >
+          </div>
+        </div>
+        <div style="flex: 1; display: flex; gap: 18px; overflow: hidden">
+          <section
+            style="
+              flex: 0 0 50%;
+              border-radius: 24px;
+              background: rgba(30, 23, 15, 0.9);
+              border: 2px solid rgba(204, 157, 112, 0.7);
+              padding: 18px;
+              display: flex;
+              flex-direction: column;
+              gap: 14px;
+              box-shadow: 0 20px 40px rgba(0, 0, 0, 0.55);
+            "
+          >
+            <header
+              style="
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+              "
+            >
+              <h2 style="margin: 0; font-size: 1.3rem">Steel & Smoke</h2>
+              <span style="font-size: 0.8rem; color: #d4b28c">Filter: All</span>
+            </header>
+            <div
+              style="
+                flex: 1;
+                display: grid;
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+                gap: 12px;
+                overflow-y: auto;
+                padding-right: 6px;
+              "
+            >
+              <article
+                style="
+                  border-radius: 16px;
+                  border: 1px solid rgba(255, 255, 255, 0.2);
+                  background: linear-gradient(180deg, #3b2b1d, #1c1208);
+                  padding: 12px;
+                  display: flex;
+                  flex-direction: column;
+                  gap: 8px;
+                "
+              >
+                <div
+                  style="
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                  "
+                >
+                  <strong>Captain Wren</strong>
+                  <span style="font-size: 0.75rem; color: #f7d8b3"
+                    >Lockpick</span
+                  >
+                </div>
+                <p style="margin: 0; font-size: 0.75rem; color: #c9b19c">
+                  Precision gunslinger with clockwork arm.
+                </p>
+                <span style="font-size: 0.7rem; color: #b28a68"
+                  >+12 Agility · +4 Charm</span
+                >
+              </article>
+              <article
+                style="
+                  border-radius: 16px;
+                  border: 1px solid rgba(255, 255, 255, 0.2);
+                  background: linear-gradient(180deg, #4c3826, #20140a);
+                  padding: 12px;
+                  display: flex;
+                  flex-direction: column;
+                  gap: 8px;
+                "
+              >
+                <div
+                  style="
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                  "
+                >
+                  <strong>Professor Lume</strong>
+                  <span style="font-size: 0.75rem; color: #f7d8b3"
+                    >Alchemist</span
+                  >
+                </div>
+                <p style="margin: 0; font-size: 0.75rem; color: #c9b19c">
+                  Master of flare bombs and tonic infusions.
+                </p>
+                <span style="font-size: 0.7rem; color: #b28a68"
+                  >+10 Intellect · +8 Vitality</span
+                >
+              </article>
+              <article
+                style="
+                  border-radius: 16px;
+                  border: 1px solid rgba(255, 255, 255, 0.2);
+                  background: linear-gradient(180deg, #775c43, #2c180a);
+                  padding: 12px;
+                  display: flex;
+                  flex-direction: column;
+                  gap: 8px;
+                "
+              >
+                <div
+                  style="
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                  "
+                >
+                  <strong>Violet Gear</strong>
+                  <span style="font-size: 0.75rem; color: #f7d8b3">Scout</span>
+                </div>
+                <p style="margin: 0; font-size: 0.75rem; color: #c9b19c">
+                  Silent flyer with electric grappling hooks.
+                </p>
+                <span style="font-size: 0.7rem; color: #b28a68"
+                  >+14 Dexterity · +3 Stealth</span
+                >
+              </article>
+              <article
+                style="
+                  border-radius: 16px;
+                  border: 1px solid rgba(255, 255, 255, 0.2);
+                  background: linear-gradient(180deg, #7a5235, #291a0c);
+                  padding: 12px;
+                  display: flex;
+                  flex-direction: column;
+                  gap: 8px;
+                "
+              >
+                <div
+                  style="
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                  "
+                >
+                  <strong>Forge Maiden</strong>
+                  <span style="font-size: 0.75rem; color: #f7d8b3"
+                    >Engineer</span
+                  >
+                </div>
+                <p style="margin: 0; font-size: 0.75rem; color: #c9b19c">
+                  Armored repair specialist with steam shield.
+                </p>
+                <span style="font-size: 0.7rem; color: #b28a68"
+                  >+9 Resilience · +6 Repair</span
+                >
+              </article>
+              <article
+                style="
+                  border-radius: 16px;
+                  border: 1px solid rgba(255, 255, 255, 0.2);
+                  background: linear-gradient(180deg, #4a2a17, #1a0e07);
+                  padding: 12px;
+                  display: flex;
+                  flex-direction: column;
+                  gap: 8px;
+                "
+              >
+                <div
+                  style="
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                  "
+                >
+                  <strong>Dr. Brim</strong>
+                  <span style="font-size: 0.75rem; color: #f7d8b3">Scout</span>
+                </div>
+                <p style="margin: 0; font-size: 0.75rem; color: #c9b19c">
+                  Airship medic with copper drone.
+                </p>
+                <span style="font-size: 0.7rem; color: #b28a68"
+                  >+7 Healing · +5 Wisdom</span
+                >
+              </article>
+              <article
+                style="
+                  border-radius: 16px;
+                  border: 1px solid rgba(255, 255, 255, 0.2);
+                  background: linear-gradient(180deg, #3e2615, #170c07);
+                  padding: 12px;
+                  display: flex;
+                  flex-direction: column;
+                  gap: 8px;
+                "
+              >
+                <div
+                  style="
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                  "
+                >
+                  <strong>Lady Cogs</strong>
+                  <span style="font-size: 0.75rem; color: #f7d8b3"
+                    >Mechanic</span
+                  >
+                </div>
+                <p style="margin: 0; font-size: 0.75rem; color: #c9b19c">
+                  Tinkerer with magnetic lures.
+                </p>
+                <span style="font-size: 0.7rem; color: #b28a68"
+                  >+11 Repair · +5 Influence</span
+                >
+              </article>
+              <article
+                style="
+                  border-radius: 16px;
+                  border: 1px solid rgba(255, 255, 255, 0.2);
+                  background: linear-gradient(180deg, #5c3b20, #211108);
+                  padding: 12px;
+                  display: flex;
+                  flex-direction: column;
+                  gap: 8px;
+                "
+              >
+                <div
+                  style="
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                  "
+                >
+                  <strong>Brass Warden</strong>
+                  <span style="font-size: 0.75rem; color: #f7d8b3">Tank</span>
+                </div>
+                <p style="margin: 0; font-size: 0.75rem; color: #c9b19c">
+                  Steam-powered guardian with cannon fists.
+                </p>
+                <span style="font-size: 0.7rem; color: #b28a68"
+                  >+15 Strength · +10 Armor</span
+                >
+              </article>
+              <article
+                style="
+                  border-radius: 16px;
+                  border: 1px solid rgba(255, 255, 255, 0.2);
+                  background: linear-gradient(180deg, #512c1b, #180c06);
+                  padding: 12px;
+                  display: flex;
+                  flex-direction: column;
+                  gap: 8px;
+                "
+              >
+                <div
+                  style="
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                  "
+                >
+                  <strong>Whistle Sage</strong>
+                  <span style="font-size: 0.75rem; color: #f7d8b3">Mystic</span>
+                </div>
+                <p style="margin: 0; font-size: 0.75rem; color: #c9b19c">
+                  Elemental conjurer with brass flute.
+                </p>
+                <span style="font-size: 0.7rem; color: #b28a68"
+                  >+12 Focus · +8 Aura</span
+                >
+              </article>
+            </div>
+          </section>
+          <section
+            style="
+              flex: 1;
+              border-radius: 24px;
+              background: rgba(37, 26, 15, 0.9);
+              border: 2px solid rgba(160, 122, 74, 0.7);
+              padding: 20px;
+              display: flex;
+              flex-direction: column;
+              gap: 14px;
+            "
+          >
+            <header
+              style="
+                display: flex;
+                justify-content: space-between;
+                align-items: flex-start;
+              "
+            >
+              <div>
+                <h2
+                  style="margin: 0; font-size: 1.5rem; letter-spacing: 0.05em"
+                >
+                  Selected: Forge Maiden
+                </h2>
+                <p style="margin: 6px 0 0; font-size: 0.9rem; color: #d4bea5">
+                  Valiant engineer attuned to steam cores.
+                </p>
+              </div>
+              <span
+                style="
+                  padding: 6px 12px;
+                  border-radius: 12px;
+                  background: #3b1b00;
+                  border: 1px solid #f4b86b;
+                  font-size: 0.75rem;
+                "
+                >Rank · Elite</span
+              >
+            </header>
+            <div style="display: flex; gap: 18px">
+              <div
+                style="
+                  flex: 1;
+                  border-radius: 18px;
+                  background: rgba(255, 255, 255, 0.05);
+                  border: 1px solid rgba(255, 255, 255, 0.08);
+                  padding: 16px;
+                  display: flex;
+                  flex-direction: column;
+                  gap: 10px;
+                "
+              >
+                <h3
+                  style="
+                    margin: 0;
+                    font-size: 1.1rem;
+                    text-transform: uppercase;
+                    letter-spacing: 0.2em;
+                  "
+                >
+                  Attributes
+                </h3>
+                <div style="display: flex; gap: 8px">
+                  <div
+                    style="
+                      flex: 1;
+                      display: flex;
+                      flex-direction: column;
+                      gap: 4px;
+                    "
+                  >
+                    <span style="font-size: 0.75rem; color: #d4bea5"
+                      >Strength</span
+                    >
+                    <div
+                      style="
+                        height: 10px;
+                        border-radius: 5px;
+                        background: #2f1f11;
+                      "
+                    >
+                      <div
+                        style="
+                          width: 72%;
+                          height: 100%;
+                          border-radius: 5px;
+                          background: linear-gradient(90deg, #f57e24, #ffb347);
+                        "
+                      ></div>
+                    </div>
+                  </div>
+                  <div
+                    style="
+                      flex: 1;
+                      display: flex;
+                      flex-direction: column;
+                      gap: 4px;
+                    "
+                  >
+                    <span style="font-size: 0.75rem; color: #d4bea5"
+                      >Agility</span
+                    >
+                    <div
+                      style="
+                        height: 10px;
+                        border-radius: 5px;
+                        background: #2f1f11;
+                      "
+                    >
+                      <div
+                        style="
+                          width: 54%;
+                          height: 100%;
+                          border-radius: 5px;
+                          background: linear-gradient(90deg, #c75eff, #f0b1ff);
+                        "
+                      ></div>
+                    </div>
+                  </div>
+                </div>
+                <div style="display: flex; gap: 8px">
+                  <div
+                    style="
+                      flex: 1;
+                      display: flex;
+                      flex-direction: column;
+                      gap: 4px;
+                    "
+                  >
+                    <span style="font-size: 0.75rem; color: #d4bea5"
+                      >Intellect</span
+                    >
+                    <div
+                      style="
+                        height: 10px;
+                        border-radius: 5px;
+                        background: #2f1f11;
+                      "
+                    >
+                      <div
+                        style="
+                          width: 66%;
+                          height: 100%;
+                          border-radius: 5px;
+                          background: linear-gradient(90deg, #3ab7d3, #99e8ff);
+                        "
+                      ></div>
+                    </div>
+                  </div>
+                  <div
+                    style="
+                      flex: 1;
+                      display: flex;
+                      flex-direction: column;
+                      gap: 4px;
+                    "
+                  >
+                    <span style="font-size: 0.75rem; color: #d4bea5"
+                      >Resilience</span
+                    >
+                    <div
+                      style="
+                        height: 10px;
+                        border-radius: 5px;
+                        background: #2f1f11;
+                      "
+                    >
+                      <div
+                        style="
+                          width: 80%;
+                          height: 100%;
+                          border-radius: 5px;
+                          background: linear-gradient(90deg, #6fb344, #8dee62);
+                        "
+                      ></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div
+                style="
+                  flex: 0 0 48%;
+                  background: rgba(255, 255, 255, 0.05);
+                  border-radius: 18px;
+                  border: 1px solid rgba(255, 255, 255, 0.08);
+                  padding: 16px;
+                  display: flex;
+                  flex-direction: column;
+                  gap: 8px;
+                "
+              >
+                <h3
+                  style="margin: 0; font-size: 1.05rem; letter-spacing: 0.15em"
+                >
+                  Gear
+                </h3>
+                <ul
+                  style="
+                    margin: 0;
+                    padding: 0 0 0 14px;
+                    display: flex;
+                    flex-direction: column;
+                    gap: 6px;
+                    font-size: 0.85rem;
+                    color: #ddc8b0;
+                  "
+                >
+                  <li>Steam Gauntlets · Precision</li>
+                  <li>Copper Shield · Deflect</li>
+                  <li>Thermal Wrench · Repair</li>
+                  <li>Clockwork Drone · Support</li>
+                </ul>
+              </div>
+            </div>
+            <section style="display: flex; flex-direction: column; gap: 10px">
+              <div style="display: flex; gap: 12px; flex-wrap: wrap">
+                <p
+                  style="flex: 1; margin: 0; font-size: 0.85rem; color: #eccfa8"
+                >
+                  Sparks dance across her boots as she calibrates the engines.
+                  Every rivet sings with warmth.
+                </p>
+                <p
+                  style="flex: 1; margin: 0; font-size: 0.85rem; color: #d7c9b6"
+                >
+                  Wind gusts ripple through the copper coils while steam vents
+                  hiss in rhythm.
+                </p>
+              </div>
+              <article
+                style="
+                  border-radius: 12px;
+                  padding: 14px;
+                  background: rgba(255, 255, 255, 0.03);
+                  border: 1px solid rgba(255, 255, 255, 0.06);
+                  display: flex;
+                  flex-direction: column;
+                  gap: 6px;
+                "
+              >
+                <div
+                  style="
+                    display: flex;
+                    justify-content: space-between;
+                    font-size: 0.75rem;
+                    color: #d4bea5;
+                  "
+                >
+                  <span>Special Ability</span
+                  ><span style="color: #fbd78f">Overcharge Flux</span>
+                </div>
+                <p style="margin: 0; font-size: 0.75rem; color: #ddc8b0">
+                  Empowers nearby allies with a burst of molten energy, melting
+                  enemy armor and igniting gears.
+                </p>
+              </article>
+            </section>
+          </section>
+        </div>
+        <footer
+          style="
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-radius: 20px;
+            padding: 16px 22px;
+            background: linear-gradient(180deg, #47331b, #1a1007);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.65);
+          "
+        >
+          <div style="display: flex; gap: 8px; align-items: center">
+            <span
+              style="
+                width: 10px;
+                height: 10px;
+                border-radius: 999px;
+                background: #f7d84b;
+              "
+            ></span>
+            <p style="margin: 0; font-size: 0.8rem">Selected characters 8/12</p>
+          </div>
+          <div style="display: flex; gap: 16px">
+            <button
+              style="
+                padding: 12px 26px;
+                border-radius: 999px;
+                border: 2px solid #f7d84b;
+                background: transparent;
+                color: #f7d84b;
+                font-size: 0.85rem;
+              "
+            >
+              Random
+            </button>
+            <button
+              style="
+                padding: 12px 26px;
+                border-radius: 999px;
+                border: none;
+                background: #f7d84b;
+                color: #3b1605;
+                font-size: 0.85rem;
+              "
+            >
+              Back
+            </button>
+            <button
+              style="
+                padding: 12px 26px;
+                border-radius: 999px;
+                border: none;
+                background: #f77f3b;
+                color: #1b1003;
+                font-size: 0.85rem;
+              "
+            >
+              Confirm
+            </button>
+          </div>
+        </footer>
+      </main>
+    </div>
+  </body>
+</html>

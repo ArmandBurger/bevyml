@@ -1,0 +1,825 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Space Station Management</title>
+  </head>
+  <body
+    style="
+      margin: 0;
+      background: #02030f;
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      color: #f5f7ff;
+    "
+  >
+    <div
+      style="
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        background: linear-gradient(180deg, #030714, #040623 60%, #01020a);
+        border: 6px solid #050721;
+      "
+    >
+      <header
+        style="
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          padding: 16px 28px;
+          background: rgba(4, 7, 20, 0.95);
+          border-bottom: 2px solid #10223b;
+          box-shadow: 0 8px 24px rgba(0, 0, 0, 0.55);
+        "
+      >
+        <div>
+          <h1 style="margin: 0; font-size: 1.8rem; letter-spacing: 0.2em">
+            ORBITAL HUB
+          </h1>
+          <p style="margin: 4px 0 0; font-size: 0.85rem; color: #8abef4">
+            Station Control · Cycle 2197
+          </p>
+        </div>
+        <div style="display: flex; gap: 12px">
+          <span
+            style="
+              width: 18px;
+              height: 18px;
+              border-radius: 50%;
+              background: #4fff8a;
+              box-shadow: 0 0 10px rgba(79, 255, 138, 0.7);
+            "
+          ></span>
+          <span
+            style="
+              width: 18px;
+              height: 18px;
+              border-radius: 50%;
+              background: #ffd662;
+              box-shadow: 0 0 10px rgba(255, 214, 98, 0.7);
+            "
+          ></span>
+          <span
+            style="
+              width: 18px;
+              height: 18px;
+              border-radius: 50%;
+              background: #ff5a7a;
+              box-shadow: 0 0 10px rgba(255, 90, 122, 0.7);
+            "
+          ></span>
+          <span
+            style="
+              padding: 8px 12px;
+              border-radius: 10px;
+              border: 1px solid #1d2d49;
+              background: #040a1a;
+              font-size: 0.75rem;
+            "
+            >Synced</span
+          >
+        </div>
+      </header>
+
+      <div style="flex: 1; display: flex; overflow: hidden">
+        <nav
+          style="
+            width: 260px;
+            border-right: 2px solid #111d33;
+            background: #060a1d;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            overflow-y: auto;
+          "
+        >
+          <h2
+            style="
+              margin: 0;
+              font-size: 0.95rem;
+              letter-spacing: 0.3em;
+              color: #89c5ff;
+            "
+          >
+            NAVIGATION
+          </h2>
+          <ul
+            style="
+              margin: 0;
+              padding: 0;
+              list-style: none;
+              display: flex;
+              flex-direction: column;
+              gap: 6px;
+              font-size: 0.9rem;
+            "
+          >
+            <li
+              style="
+                padding: 8px 12px;
+                border-radius: 8px;
+                border: 1px solid #1a2c4c;
+                background: #070d23;
+              "
+            >
+              Overview
+            </li>
+            <li
+              style="
+                padding: 8px 12px;
+                border-radius: 8px;
+                border: 1px solid #1a2c4c;
+              "
+            >
+              Modules
+            </li>
+            <li
+              style="
+                padding: 8px 12px;
+                border-radius: 8px;
+                border: 1px solid #1a2c4c;
+              "
+            >
+              Crew Logs
+            </li>
+            <li
+              style="
+                padding: 8px 12px;
+                border-radius: 8px;
+                border: 1px solid #1a2c4c;
+              "
+            >
+              Engineering
+            </li>
+            <li
+              style="
+                padding: 8px 12px;
+                border-radius: 8px;
+                border: 1px solid #1a2c4c;
+              "
+            >
+              Power Grid
+            </li>
+            <li
+              style="
+                padding: 8px 12px;
+                border-radius: 8px;
+                border: 1px solid #1a2c4c;
+              "
+            >
+              Hydroponics
+            </li>
+            <li
+              style="
+                padding: 8px 12px;
+                border-radius: 8px;
+                border: 1px solid #1a2c4c;
+              "
+            >
+              Security
+            </li>
+            <li
+              style="
+                padding: 8px 12px;
+                border-radius: 8px;
+                border: 1px solid #1a2c4c;
+              "
+            >
+              Docking
+            </li>
+            <li
+              style="
+                padding: 8px 12px;
+                border-radius: 8px;
+                border: 1px solid #1a2c4c;
+              "
+            >
+              Science
+            </li>
+            <li
+              style="
+                padding: 8px 12px;
+                border-radius: 8px;
+                border: 1px solid #1a2c4c;
+              "
+            >
+              Medic
+            </li>
+            <li
+              style="
+                padding: 8px 12px;
+                border-radius: 8px;
+                border: 1px solid #1a2c4c;
+              "
+            >
+              Logistics
+            </li>
+            <li
+              style="
+                padding: 8px 12px;
+                border-radius: 8px;
+                border: 1px solid #1a2c4c;
+              "
+            >
+              Archives
+            </li>
+          </ul>
+        </nav>
+
+        <main
+          style="
+            flex: 1;
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+            overflow: hidden;
+          "
+        >
+          <section
+            style="
+              display: grid;
+              grid-template-columns: repeat(3, minmax(0, 1fr));
+              gap: 14px;
+            "
+          >
+            <article
+              style="
+                border-radius: 18px;
+                background: #071022;
+                border: 1px solid #1a2750;
+                padding: 18px;
+                display: flex;
+                flex-direction: column;
+                gap: 10px;
+              "
+            >
+              <h3 style="margin: 0; font-size: 1rem">Module Grid</h3>
+              <div
+                style="
+                  display: grid;
+                  grid-template-columns: repeat(3, minmax(0, 1fr));
+                  gap: 8px;
+                "
+              >
+                <div
+                  style="
+                    height: 60px;
+                    border-radius: 10px;
+                    background: linear-gradient(135deg, #1a3c7f, #042038);
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    border: 1px solid #22305a;
+                  "
+                >
+                  Hab
+                </div>
+                <div
+                  style="
+                    height: 60px;
+                    border-radius: 10px;
+                    background: linear-gradient(135deg, #1a3c7f, #042038);
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    border: 1px solid #22305a;
+                  "
+                >
+                  Ops
+                </div>
+                <div
+                  style="
+                    height: 60px;
+                    border-radius: 10px;
+                    background: linear-gradient(135deg, #1a3c7f, #042038);
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    border: 1px solid #22305a;
+                  "
+                >
+                  Forge
+                </div>
+                <div
+                  style="
+                    height: 60px;
+                    border-radius: 10px;
+                    background: linear-gradient(135deg, #1a3c7f, #042038);
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    border: 1px solid #22305a;
+                  "
+                >
+                  Grid
+                </div>
+                <div
+                  style="
+                    height: 60px;
+                    border-radius: 10px;
+                    background: linear-gradient(135deg, #1a3c7f, #042038);
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    border: 1px solid #22305a;
+                  "
+                >
+                  Lab
+                </div>
+                <div
+                  style="
+                    height: 60px;
+                    border-radius: 10px;
+                    background: linear-gradient(135deg, #1a3c7f, #042038);
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    border: 1px solid #22305a;
+                  "
+                >
+                  Life
+                </div>
+              </div>
+            </article>
+            <article
+              style="
+                border-radius: 18px;
+                background: #071022;
+                border: 1px solid #1a2750;
+                padding: 18px;
+                display: flex;
+                flex-direction: column;
+                gap: 12px;
+              "
+            >
+              <header
+                style="
+                  display: flex;
+                  justify-content: space-between;
+                  align-items: center;
+                "
+              >
+                <h3 style="margin: 0; font-size: 1rem">Module Details</h3>
+                <span style="font-size: 0.75rem; color: #8ad4ff">T-12m</span>
+              </header>
+              <div style="display: flex; gap: 10px">
+                <div
+                  style="
+                    flex: 1;
+                    border-radius: 10px;
+                    background: #030b19;
+                    padding: 10px;
+                    border: 1px solid #14243a;
+                  "
+                >
+                  <strong style="font-size: 0.8rem">Energy</strong>
+                  <div
+                    style="
+                      height: 6px;
+                      border-radius: 4px;
+                      background: #02040f;
+                      margin-top: 6px;
+                    "
+                  >
+                    <div
+                      style="
+                        width: 88%;
+                        height: 100%;
+                        border-radius: 4px;
+                        background: linear-gradient(90deg, #3fd8ff, #0ca9ff);
+                      "
+                    ></div>
+                  </div>
+                </div>
+                <div
+                  style="
+                    flex: 1;
+                    border-radius: 10px;
+                    background: #030b19;
+                    padding: 10px;
+                    border: 1px solid #14243a;
+                  "
+                >
+                  <strong style="font-size: 0.8rem">Integrity</strong>
+                  <div
+                    style="
+                      height: 6px;
+                      border-radius: 4px;
+                      background: #02040f;
+                      margin-top: 6px;
+                    "
+                  >
+                    <div
+                      style="
+                        width: 76%;
+                        height: 100%;
+                        border-radius: 4px;
+                        background: linear-gradient(90deg, #ffb347, #ff7b50);
+                      "
+                    ></div>
+                  </div>
+                </div>
+                <div
+                  style="
+                    flex: 1;
+                    border-radius: 10px;
+                    background: #030b19;
+                    padding: 10px;
+                    border: 1px solid #14243a;
+                  "
+                >
+                  <strong style="font-size: 0.8rem">Crew</strong>
+                  <div
+                    style="
+                      height: 6px;
+                      border-radius: 4px;
+                      background: #02040f;
+                      margin-top: 6px;
+                    "
+                  >
+                    <div
+                      style="
+                        width: 62%;
+                        height: 100%;
+                        border-radius: 4px;
+                        background: linear-gradient(90deg, #9cff7c, #4cff4c);
+                      "
+                    ></div>
+                  </div>
+                </div>
+              </div>
+              <p style="margin: 0; font-size: 0.8rem; color: #cdd7ff">
+                Core module is linked to 9 satellites. Maintenance window
+                running at 24%. Keep exploring other sectors for anomalies.
+              </p>
+            </article>
+            <article
+              style="
+                border-radius: 18px;
+                background: #071022;
+                border: 1px solid #1a2750;
+                padding: 18px;
+                display: flex;
+                flex-direction: column;
+                gap: 10px;
+              "
+            >
+              <h3 style="margin: 0; font-size: 1rem">Auxiliary Grid</h3>
+              <div
+                style="
+                  display: grid;
+                  grid-template-columns: repeat(2, minmax(0, 1fr));
+                  gap: 8px;
+                "
+              >
+                <div
+                  style="
+                    border-radius: 12px;
+                    border: 1px solid #162845;
+                    padding: 10px;
+                    background: #030b19;
+                  "
+                >
+                  <span style="font-size: 0.75rem; color: #7ad4ff"
+                    >Radiation</span
+                  >
+                  <p style="margin: 4px 0 0; font-size: 1.2rem">0.17</p>
+                </div>
+                <div
+                  style="
+                    border-radius: 12px;
+                    border: 1px solid #162845;
+                    padding: 10px;
+                    background: #030b19;
+                  "
+                >
+                  <span style="font-size: 0.75rem; color: #7ad4ff">Docked</span>
+                  <p style="margin: 4px 0 0; font-size: 1.2rem">4/6</p>
+                </div>
+              </div>
+              <p style="margin: 0; font-size: 0.8rem">
+                Sensors detect ripples in the thermal shield; calibrate the
+                emitter to reduce drift.
+              </p>
+            </article>
+          </section>
+
+          <section style="display: flex; gap: 16px; flex: 1; overflow: hidden">
+            <div
+              style="
+                flex: 1;
+                border-radius: 18px;
+                border: 1px solid #1a2b4a;
+                background: #041126;
+                padding: 16px;
+                display: flex;
+                flex-direction: column;
+                gap: 12px;
+              "
+            >
+              <h3 style="margin: 0; font-size: 1rem">Logs</h3>
+              <div
+                style="
+                  flex: 1;
+                  overflow-y: auto;
+                  padding-right: 6px;
+                  display: flex;
+                  flex-direction: column;
+                  gap: 10px;
+                "
+              >
+                <p
+                  style="
+                    margin: 0;
+                    background: #050b20;
+                    border-radius: 10px;
+                    padding: 12px;
+                    border: 1px solid #132240;
+                  "
+                >
+                  [02:12] Module 07 rebalancing complete. Crew ready.
+                </p>
+                <p
+                  style="
+                    margin: 0;
+                    background: #050b20;
+                    border-radius: 10px;
+                    padding: 12px;
+                    border: 1px solid #132240;
+                  "
+                >
+                  [02:18] Astro buoy 3 flagged micro-debris. Awaiting command.
+                </p>
+                <p
+                  style="
+                    margin: 0;
+                    background: #050b20;
+                    border-radius: 10px;
+                    padding: 12px;
+                    border: 1px solid #132240;
+                  "
+                >
+                  [02:21] Relay to harvest farm bubbled at 72% throughput.
+                </p>
+                <p
+                  style="
+                    margin: 0;
+                    background: #050b20;
+                    border-radius: 10px;
+                    padding: 12px;
+                    border: 1px solid #132240;
+                  "
+                >
+                  [02:34] Docking bay 1 cleared for incoming vessel.
+                </p>
+                <p
+                  style="
+                    margin: 0;
+                    background: #050b20;
+                    border-radius: 10px;
+                    padding: 12px;
+                    border: 1px solid #132240;
+                  "
+                >
+                  [02:39] Hydroponics zeroed PH shift; nutrient report stable.
+                </p>
+                <p
+                  style="
+                    margin: 0;
+                    background: #050b20;
+                    border-radius: 10px;
+                    padding: 12px;
+                    border: 1px solid #132240;
+                  "
+                >
+                  [02:45] Security drones returned to standby after sweep.
+                </p>
+                <p
+                  style="
+                    margin: 0;
+                    background: #050b20;
+                    border-radius: 10px;
+                    padding: 12px;
+                    border: 1px solid #132240;
+                  "
+                >
+                  [02:48] Minor hull abrasion logged at port facade.
+                </p>
+                <p
+                  style="
+                    margin: 0;
+                    background: #050b20;
+                    border-radius: 10px;
+                    padding: 12px;
+                    border: 1px solid #132240;
+                  "
+                >
+                  [02:52] Crew morale check queued at 07:00 cycle.
+                </p>
+                <p
+                  style="
+                    margin: 0;
+                    background: #050b20;
+                    border-radius: 10px;
+                    padding: 12px;
+                    border: 1px solid #132240;
+                  "
+                >
+                  [02:58] Comms encrypted for diplomatic message.
+                </p>
+                <p
+                  style="
+                    margin: 0;
+                    background: #050b20;
+                    border-radius: 10px;
+                    padding: 12px;
+                    border: 1px solid #132240;
+                  "
+                >
+                  [03:02] Strategic reserves 63% full; rebalancing scheduled.
+                </p>
+              </div>
+            </div>
+            <div
+              style="
+                flex: 1;
+                border-radius: 18px;
+                border: 1px solid #1a2b4a;
+                background: #041126;
+                padding: 16px;
+                display: flex;
+                flex-direction: column;
+                gap: 12px;
+              "
+            >
+              <h3 style="margin: 0; font-size: 1rem">Detail Panels</h3>
+              <div style="display: flex; gap: 10px">
+                <div
+                  style="
+                    flex: 1;
+                    border-radius: 12px;
+                    border: 1px solid #14243a;
+                    background: #020814;
+                    padding: 10px;
+                    display: flex;
+                    flex-direction: column;
+                    gap: 6px;
+                  "
+                >
+                  <strong>Holo Map</strong>
+                  <span style="font-size: 0.75rem; color: #8ad4ff"
+                    >Orbit 12</span
+                  >
+                  <div
+                    style="
+                      height: 80px;
+                      border-radius: 10px;
+                      background: radial-gradient(
+                        circle at 20% 20%,
+                        rgba(69, 172, 255, 0.3),
+                        rgba(3, 8, 18, 0.95)
+                      );
+                      border: 1px solid #12314a;
+                    "
+                  ></div>
+                </div>
+                <div
+                  style="
+                    flex: 1;
+                    border-radius: 12px;
+                    border: 1px solid #14243a;
+                    background: #020814;
+                    padding: 10px;
+                    display: flex;
+                    flex-direction: column;
+                    gap: 6px;
+                  "
+                >
+                  <strong>Signal Stack</strong>
+                  <ul
+                    style="
+                      margin: 0;
+                      padding-left: 12px;
+                      font-size: 0.75rem;
+                      color: #cbd7ff;
+                    "
+                  >
+                    <li>Beacon · Stable</li>
+                    <li>Relay · 11ms</li>
+                    <li>Beacon · Redundant</li>
+                  </ul>
+                  <div style="display: flex; gap: 6px">
+                    <span
+                      style="
+                        flex: 1;
+                        height: 6px;
+                        border-radius: 4px;
+                        background: #02040f;
+                      "
+                      ><span
+                        style="
+                          display: block;
+                          width: 70%;
+                          height: 100%;
+                          border-radius: 4px;
+                          background: #3ee9ff;
+                        "
+                      ></span
+                    ></span>
+                    <span
+                      style="
+                        flex: 1;
+                        height: 6px;
+                        border-radius: 4px;
+                        background: #02040f;
+                      "
+                      ><span
+                        style="
+                          display: block;
+                          width: 54%;
+                          height: 100%;
+                          border-radius: 4px;
+                          background: #7cf78f;
+                        "
+                      ></span
+                    ></span>
+                  </div>
+                </div>
+              </div>
+              <article
+                style="
+                  border-radius: 12px;
+                  border: 1px solid #14243a;
+                  background: #020814;
+                  padding: 12px;
+                  display: flex;
+                  flex-direction: column;
+                  gap: 8px;
+                "
+              >
+                <h4 style="margin: 0; font-size: 0.9rem">Mission Brief</h4>
+                <p style="margin: 0; font-size: 0.8rem; color: #cfdfff">
+                  Maintain orbital stability while refilling hydro and reactor
+                  reserves. Liaise with shuttle boy to confirm cargo drop.
+                </p>
+                <div style="display: flex; flex-wrap: wrap; gap: 8px">
+                  <span
+                    style="
+                      padding: 6px 10px;
+                      border-radius: 8px;
+                      border: 1px solid #0f1b33;
+                    "
+                    >Probe deck scheduled</span
+                  >
+                  <span
+                    style="
+                      padding: 6px 10px;
+                      border-radius: 8px;
+                      border: 1px solid #0f1b33;
+                    "
+                    >Ops ready</span
+                  >
+                  <span
+                    style="
+                      padding: 6px 10px;
+                      border-radius: 8px;
+                      border: 1px solid #0f1b33;
+                    "
+                    >Sensors green</span
+                  >
+                </div>
+              </article>
+            </div>
+          </section>
+        </main>
+      </div>
+
+      <footer
+        style="
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          padding: 12px 28px;
+          background: rgba(4, 7, 20, 0.95);
+          border-top: 2px solid #10223b;
+        "
+      >
+        <div style="display: flex; gap: 12px; font-size: 0.8rem">
+          <span>Status: Stable</span>
+          <span>Alert Level · Leisure</span>
+          <span>Orbit · 17.5 km</span>
+        </div>
+        <div
+          style="display: flex; gap: 10px; font-size: 0.75rem; color: #7ad4ff"
+        >
+          <span>OPS</span>
+          <span>SYS</span>
+          <span>LOG</span>
+        </div>
+      </footer>
+    </div>
+  </body>
+</html>
