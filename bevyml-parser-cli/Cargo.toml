@@ -1,0 +1,10 @@
+[package]
+name = "bevyml-parser-cli"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+clap = { version = "4.5.54", features = ["derive"] }
+bevyml-parser = { path = "../bevyml-parser" }
+tokio = { version = "1.49.0", features = ["full"] }
+anyhow = "1.0.100"

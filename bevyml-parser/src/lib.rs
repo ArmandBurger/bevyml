@@ -23,8 +23,8 @@ impl BevymlParser {
         Self::try_new().expect("Error loading Bevyml grammar.")
     }
 
-    pub fn parse(&mut self, txt: &str) {
-        self.0.parse(txt, None);
+    pub fn parse(&mut self, txt: &str) -> Option<tree_sitter::Tree> {
+        self.0.parse(txt, None)
     }
 
     /// Parses the contents of a file asynchronously using Tokio-backed file I/O.
