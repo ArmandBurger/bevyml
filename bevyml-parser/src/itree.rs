@@ -55,19 +55,21 @@ impl<'source> Into<Vec<BevyNodeTree>> for ITree<'source> {
 }
 
 fn build_ui_node<'tree, 'source>(node: TsNode<'tree>, source: &'source str) -> INode<'source> {
-    let element_name = extract_tag_name(node, source);
+    let (info_node, is_self_closing) = resolve_element_node(node);
+    let element_name = extract_tag_name(info_node, source);
     let node_type = element_name
         .as_deref()
         .map(NodeType::from_tag_name)
         .unwrap_or_else(|| NodeType::Custom("unknown".to_string()));
     let bevy_node = node_type.to_bevy_node();
-    let ts_info = build_ts_info(node, source);
+    let ts_info = build_ts_info(info_node, source, is_self_closing);
     let mut children = Vec::new();
-    let mut cursor = node.walk();
-
-    for child in node.children(&mut cursor) {
-        if is_element(child) {
-            children.push(build_ui_node(child, source));
+    if !is_self_closing {
+        let mut cursor = node.walk();
+        for child in node.children(&mut cursor) {
+            if is_element(child) {
+                children.push(build_ui_node(child, source));
+            }
         }
     }
 
@@ -118,25 +120,37 @@ fn is_element<'tree>(node: TsNode<'tree>) -> bool {
     matches!(node.kind(), "element" | "self_closing_element")
 }
 
-fn build_ts_info<'tree, 'source>(node: TsNode<'tree>, source: &'source str) -> INodeInfo<'source> {
+fn build_ts_info<'tree, 'source>(
+    node: TsNode<'tree>,
+    source: &'source str,
+    is_self_closing: bool,
+) -> INodeInfo<'source> {
     let start = node.start_position();
     let end = node.end_position();
-    let text = if node.kind() == "element" {
+    let text = if is_self_closing {
+        node.utf8_text(source.as_bytes()).unwrap_or("").to_string()
+    } else if node.kind() == "element" {
         preview_element_text(node, source)
     } else {
         node.utf8_text(source.as_bytes()).unwrap_or("").to_string()
     };
 
+    let kind = if is_self_closing {
+        "element"
+    } else {
+        node.kind()
+    };
     let original_text = extract_text_slice(node, source);
 
     INodeInfo {
-        kind: node.kind().to_string(),
+        kind: kind.to_string(),
         start_byte: node.start_byte(),
         end_byte: node.end_byte(),
         start_position: USizeVec2::new(start.row, start.column),
         end_position: USizeVec2::new(end.row, end.column),
         text,
         original_text,
+        is_self_closing,
     }
 }
 
@@ -167,4 +181,22 @@ fn extract_text_slice<'source>(node: TsNode<'_>, source: &'source str) -> &'sour
     source
         .get(node.start_byte()..node.end_byte())
         .unwrap_or_default()
+}
+
+fn resolve_element_node<'tree>(node: TsNode<'tree>) -> (TsNode<'tree>, bool) {
+    if node.kind() == "self_closing_element" {
+        return (node, true);
+    }
+
+    if node.kind() == "element" {
+        let has_start_tag = find_child(node, "start_tag").is_some();
+        let has_end_tag = find_child(node, "end_tag").is_some();
+        if !has_start_tag && !has_end_tag {
+            if let Some(self_closing) = find_child(node, "self_closing_element") {
+                return (self_closing, true);
+            }
+        }
+    }
+
+    (node, false)
 }

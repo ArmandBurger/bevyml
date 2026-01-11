@@ -9,4 +9,5 @@ pub struct INodeInfo<'source> {
     pub end_position: USizeVec2,
     pub text: String,
     pub original_text: &'source str,
+    pub is_self_closing: bool,
 }
