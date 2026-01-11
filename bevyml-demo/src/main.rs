@@ -1,18 +1,9 @@
-use bevy::asset::AssetPlugin;
 use bevy::prelude::*;
 use bevyml::{BevyNodeTree, BevymlAsset, BevymlAssetPlugin};
 
 fn main() {
-    let asset_root = std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
-        .join("assets")
-        .to_string_lossy()
-        .into_owned();
-
     App::new()
-        .add_plugins(DefaultPlugins.set(AssetPlugin {
-            file_path: asset_root,
-            ..default()
-        }))
+        .add_plugins(DefaultPlugins)
         .add_plugins(BevymlAssetPlugin)
         .init_resource::<UiState>()
         .add_systems(Startup, setup)
