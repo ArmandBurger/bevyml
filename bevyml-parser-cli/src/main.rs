@@ -108,8 +108,8 @@ async fn run_parse(args: ParseArgs) -> anyhow::Result<()> {
     let tree = parser.parse(&content)?;
     let parse_duration = parse_start.elapsed();
 
-    let tree: BevyNodeTree = tree.into();
-    dbg!(tree);
+    let trees: Vec<BevyNodeTree> = tree.into();
+    dbg!(trees);
     println!("Parsing took {:.3}us", parse_duration.as_micros());
 
     Ok(())

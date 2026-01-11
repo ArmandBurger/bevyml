@@ -9,12 +9,12 @@ use std::{convert::TryFrom, fmt};
 
 /// Intermediary Tree
 pub struct ITree {
-    pub root: INode,
+    pub roots: Vec<INode>,
 }
 
 impl fmt::Debug for ITree {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        f.debug_struct("ITree").field("root", &self.root).finish()
+        f.debug_struct("ITree").field("roots", &self.roots).finish()
     }
 }
 
@@ -39,16 +39,18 @@ impl TryFrom<(&Tree, &str)> for ITree {
     type Error = ITreeError;
 
     fn try_from((tree, source): (&Tree, &str)) -> Result<Self, Self::Error> {
-        let root = find_first_element(tree.root_node()).ok_or(ITreeError::MissingRootElement)?;
-        Ok(Self {
-            root: build_ui_node(root, source),
-        })
+        let roots = collect_root_elements(tree.root_node(), source);
+        if roots.is_empty() {
+            return Err(ITreeError::MissingRootElement);
+        }
+
+        Ok(Self { roots })
     }
 }
 
-impl Into<BevyNodeTree> for ITree {
-    fn into(self) -> BevyNodeTree {
-        self.root.into()
+impl Into<Vec<BevyNodeTree>> for ITree {
+    fn into(self) -> Vec<BevyNodeTree> {
+        self.roots.into_iter().map(BevyNodeTree::from).collect()
     }
 }
 
@@ -101,19 +103,12 @@ fn find_child<'tree>(node: TsNode<'tree>, kind: &str) -> Option<TsNode<'tree>> {
         .find(|child| child.kind() == kind)
 }
 
-fn find_first_element<'tree>(node: TsNode<'tree>) -> Option<TsNode<'tree>> {
-    if is_element(node) {
-        return Some(node);
-    }
-
+fn collect_root_elements<'tree>(node: TsNode<'tree>, source: &str) -> Vec<INode> {
     let mut cursor = node.walk();
-    for child in node.children(&mut cursor) {
-        if let Some(found) = find_first_element(child) {
-            return Some(found);
-        }
-    }
-
-    None
+    node.children(&mut cursor)
+        .filter(|child| is_element(*child))
+        .map(|child| build_ui_node(child, source))
+        .collect()
 }
 
 fn is_element<'tree>(node: TsNode<'tree>) -> bool {
