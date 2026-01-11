@@ -6,12 +6,12 @@ use bevy_ui::Node;
 use crate::inode_info::INodeInfo;
 
 /// Intermediary Node
-pub struct INode {
+pub struct INode<'source> {
     pub node_type: NodeType,
     pub element_name: Option<String>,
     pub node: Node,
-    pub ts_info: INodeInfo,
-    pub children: Vec<INode>,
+    pub ts_info: INodeInfo<'source>,
+    pub children: Vec<INode<'source>>,
 }
 
 #[derive(Debug)]
@@ -35,7 +35,7 @@ impl fmt::Debug for INodeBundle {
     }
 }
 
-impl INode {
+impl<'source> INode<'source> {
     pub fn to_bundle(&self) -> INodeBundle {
         INodeBundle {
             name: Name::new(self.element_name.clone().unwrap_or("unknown".to_string())),
@@ -44,8 +44,8 @@ impl INode {
     }
 }
 
-impl From<INode> for BevyNodeTree {
-    fn from(inode: INode) -> Self {
+impl<'source> From<INode<'source>> for BevyNodeTree {
+    fn from(inode: INode<'source>) -> Self {
         let children = inode.children.into_iter().map(BevyNodeTree::from).collect();
 
         BevyNodeTree {
@@ -58,7 +58,7 @@ impl From<INode> for BevyNodeTree {
     }
 }
 
-impl fmt::Debug for INode {
+impl<'source> fmt::Debug for INode<'source> {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         f.debug_struct("INode")
             .field("node_type", &self.node_type)

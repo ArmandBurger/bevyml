@@ -30,7 +30,7 @@ impl BevymlParser {
         Self::try_new().expect("Error loading Bevyml grammar.")
     }
 
-    pub fn parse(&mut self, txt: &str) -> Result<ITree, ITreeError> {
+    pub fn parse<'source>(&mut self, txt: &'source str) -> Result<ITree<'source>, ITreeError> {
         let tree = self
             .0
             .parse(txt, None)

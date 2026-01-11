@@ -8,11 +8,11 @@ use crate::{
 use std::{convert::TryFrom, fmt};
 
 /// Intermediary Tree
-pub struct ITree {
-    pub roots: Vec<INode>,
+pub struct ITree<'source> {
+    pub roots: Vec<INode<'source>>,
 }
 
-impl fmt::Debug for ITree {
+impl<'source> fmt::Debug for ITree<'source> {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         f.debug_struct("ITree").field("roots", &self.roots).finish()
     }
@@ -35,10 +35,10 @@ impl fmt::Display for ITreeError {
 
 impl std::error::Error for ITreeError {}
 
-impl TryFrom<(&Tree, &str)> for ITree {
+impl<'source> TryFrom<(&Tree, &'source str)> for ITree<'source> {
     type Error = ITreeError;
 
-    fn try_from((tree, source): (&Tree, &str)) -> Result<Self, Self::Error> {
+    fn try_from((tree, source): (&Tree, &'source str)) -> Result<Self, Self::Error> {
         let roots = collect_root_elements(tree.root_node(), source);
         if roots.is_empty() {
             return Err(ITreeError::MissingRootElement);
@@ -48,13 +48,13 @@ impl TryFrom<(&Tree, &str)> for ITree {
     }
 }
 
-impl Into<Vec<BevyNodeTree>> for ITree {
+impl<'source> Into<Vec<BevyNodeTree>> for ITree<'source> {
     fn into(self) -> Vec<BevyNodeTree> {
         self.roots.into_iter().map(BevyNodeTree::from).collect()
     }
 }
 
-fn build_ui_node<'tree>(node: TsNode<'tree>, source: &str) -> INode {
+fn build_ui_node<'tree, 'source>(node: TsNode<'tree>, source: &'source str) -> INode<'source> {
     let element_name = extract_tag_name(node, source);
     let node_type = element_name
         .as_deref()
@@ -103,7 +103,10 @@ fn find_child<'tree>(node: TsNode<'tree>, kind: &str) -> Option<TsNode<'tree>> {
         .find(|child| child.kind() == kind)
 }
 
-fn collect_root_elements<'tree>(node: TsNode<'tree>, source: &str) -> Vec<INode> {
+fn collect_root_elements<'tree, 'source>(
+    node: TsNode<'tree>,
+    source: &'source str,
+) -> Vec<INode<'source>> {
     let mut cursor = node.walk();
     node.children(&mut cursor)
         .filter(|child| is_element(*child))
@@ -115,7 +118,7 @@ fn is_element<'tree>(node: TsNode<'tree>) -> bool {
     matches!(node.kind(), "element" | "self_closing_element")
 }
 
-fn build_ts_info<'tree>(node: TsNode<'tree>, source: &str) -> INodeInfo {
+fn build_ts_info<'tree, 'source>(node: TsNode<'tree>, source: &'source str) -> INodeInfo<'source> {
     let start = node.start_position();
     let end = node.end_position();
     let text = if node.kind() == "element" {
@@ -124,6 +127,8 @@ fn build_ts_info<'tree>(node: TsNode<'tree>, source: &str) -> INodeInfo {
         node.utf8_text(source.as_bytes()).unwrap_or("").to_string()
     };
 
+    let original_text = extract_text_slice(node, source);
+
     INodeInfo {
         kind: node.kind().to_string(),
         start_byte: node.start_byte(),
@@ -131,6 +136,7 @@ fn build_ts_info<'tree>(node: TsNode<'tree>, source: &str) -> INodeInfo {
         start_position: USizeVec2::new(start.row, start.column),
         end_position: USizeVec2::new(end.row, end.column),
         text,
+        original_text,
     }
 }
 
@@ -155,4 +161,10 @@ fn preview_element_text<'tree>(node: TsNode<'tree>, source: &str) -> String {
 
 fn has_inner_content<'tree>(node: TsNode<'tree>) -> bool {
     node.named_child_count() > 2
+}
+
+fn extract_text_slice<'source>(node: TsNode<'_>, source: &'source str) -> &'source str {
+    source
+        .get(node.start_byte()..node.end_byte())
+        .unwrap_or_default()
 }
