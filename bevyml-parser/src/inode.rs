@@ -1,5 +1,6 @@
 use std::fmt;
 
+use bevy_ecs::{bundle::Bundle, name::Name};
 use bevy_ui::Node;
 
 use crate::inode_info::INodeInfo;
@@ -7,15 +8,39 @@ use crate::inode_info::INodeInfo;
 /// Intermediary Node
 pub struct INode {
     pub node_type: NodeType,
+    pub element_name: Option<String>,
     pub node: Node,
     pub ts_info: INodeInfo,
     pub children: Vec<INode>,
+}
+
+pub struct BevyNodeTree {
+    pub node: Node,
+    pub children: Vec<BevyNodeTree>,
+}
+
+impl INode {
+    pub fn to_bundle(&self) -> impl Bundle {
+        (Name::new("html_node"), Node::default())
+    }
+}
+
+impl From<INode> for BevyNodeTree {
+    fn from(inode: INode) -> Self {
+        let children = inode.children.into_iter().map(BevyNodeTree::from).collect();
+
+        BevyNodeTree {
+            node: inode.node,
+            children,
+        }
+    }
 }
 
 impl fmt::Debug for INode {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         f.debug_struct("INode")
             .field("node_type", &self.node_type)
+            .field("element_name", &self.element_name)
             .field("ts_info", &self.ts_info)
             .field("children", &self.children)
             .finish()

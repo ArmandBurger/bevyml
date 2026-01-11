@@ -11,3 +11,4 @@ pollster = "0.4.0"
 tokio = { version = "1.49.0", features = ["full"] }
 bevy_ui = "0.17.3"
 bevy_math = "0.17.3"
+bevy_ecs = "0.17.3"

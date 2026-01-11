@@ -1,7 +1,7 @@
 use bevy_math::USizeVec2;
 
 use crate::{
-    inode::{INode, NodeType},
+    inode::{BevyNodeTree, INode, NodeType},
     inode_info::INodeInfo,
     tree_sitter::{Node as TsNode, Tree},
 };
@@ -46,9 +46,17 @@ impl TryFrom<(&Tree, &str)> for ITree {
     }
 }
 
+impl Into<BevyNodeTree> for ITree {
+    fn into(self) -> BevyNodeTree {
+        self.root.into()
+    }
+}
+
 fn build_ui_node<'tree>(node: TsNode<'tree>, source: &str) -> INode {
-    let node_type = extract_tag_name(node, source)
-        .map(|tag| NodeType::from_tag_name(tag.as_str()))
+    let element_name = extract_tag_name(node, source);
+    let node_type = element_name
+        .as_deref()
+        .map(NodeType::from_tag_name)
         .unwrap_or_else(|| NodeType::Custom("unknown".to_string()));
     let bevy_node = node_type.to_bevy_node();
     let ts_info = build_ts_info(node, source);
@@ -63,6 +71,7 @@ fn build_ui_node<'tree>(node: TsNode<'tree>, source: &str) -> INode {
 
     INode {
         node_type,
+        element_name,
         node: bevy_node,
         ts_info,
         children,
