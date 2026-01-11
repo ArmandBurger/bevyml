@@ -1,4 +1,8 @@
-use bevyml_parser::{BevymlParser, inode::BevyNodeTree, tree_sitter::LanguageError};
+use bevyml_parser::{
+    BevymlParser,
+    inode::{BevyNodeTree, INode},
+    tree_sitter::LanguageError,
+};
 use clap::{Args, Parser, Subcommand};
 use std::{
     fmt, io,
@@ -106,6 +110,7 @@ async fn run_parse(args: ParseArgs) -> anyhow::Result<()> {
     let mut parser = BevymlParser::try_new()?;
     let parse_start = Instant::now();
     let tree = parser.parse(&content)?;
+    print_inodes_ts_text(&tree.roots, 0);
     let parse_duration = parse_start.elapsed();
 
     let trees: Vec<BevyNodeTree> = tree.into();
@@ -127,4 +132,16 @@ async fn resolve_path(path: &Path) -> Result<PathBuf, CliError> {
     fs::canonicalize(path)
         .await
         .map_err(|err| CliError::io(path.to_owned(), "canonicalize path", err))
+}
+
+fn print_inodes_ts_text(nodes: &[INode], depth: usize) {
+    for node in nodes {
+        let indent = "  ".repeat(depth);
+        let element_name = node.element_name.as_deref().unwrap_or("<unknown>");
+        println!(
+            "{}- node_type={:?} kind={} element={} ts_text={:?}",
+            indent, node.node_type, node.ts_info.kind, element_name, node.ts_info.text
+        );
+        print_inodes_ts_text(&node.children, depth + 1);
+    }
 }
