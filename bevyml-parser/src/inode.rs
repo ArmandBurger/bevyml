@@ -14,14 +14,33 @@ pub struct INode {
     pub children: Vec<INode>,
 }
 
+#[derive(Debug)]
 pub struct BevyNodeTree {
-    pub node: Node,
+    pub node: INodeBundle,
     pub children: Vec<BevyNodeTree>,
 }
 
+#[derive(Bundle)]
+pub struct INodeBundle {
+    name: Name,
+    node: Node,
+}
+
+impl fmt::Debug for INodeBundle {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        f.debug_struct("INodeBundle")
+            .field("name", &self.name)
+            // .field("node", &self.node)
+            .finish()
+    }
+}
+
 impl INode {
-    pub fn to_bundle(&self) -> impl Bundle {
-        (Name::new("html_node"), Node::default())
+    pub fn to_bundle(&self) -> INodeBundle {
+        INodeBundle {
+            name: Name::new(self.element_name.clone().unwrap_or("unknown".to_string())),
+            node: Node::default(),
+        }
     }
 }
 
@@ -30,7 +49,10 @@ impl From<INode> for BevyNodeTree {
         let children = inode.children.into_iter().map(BevyNodeTree::from).collect();
 
         BevyNodeTree {
-            node: inode.node,
+            node: INodeBundle {
+                name: Name::new(inode.element_name.unwrap_or("unknown".into())),
+                node: inode.node,
+            },
             children,
         }
     }

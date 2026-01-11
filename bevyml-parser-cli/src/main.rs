@@ -1,4 +1,4 @@
-use bevyml_parser::{BevymlParser, tree_sitter::LanguageError};
+use bevyml_parser::{BevymlParser, inode::BevyNodeTree, tree_sitter::LanguageError};
 use clap::{Args, Parser, Subcommand};
 use std::{
     fmt, io,
@@ -87,7 +87,7 @@ impl From<LanguageError> for CliError {
 }
 
 #[tokio::main]
-async fn main() -> Result<(), CliError> {
+async fn main() -> anyhow::Result<()> {
     let cli = Cli::parse();
 
     match cli.command {
@@ -95,7 +95,7 @@ async fn main() -> Result<(), CliError> {
     }
 }
 
-async fn run_parse(args: ParseArgs) -> Result<(), CliError> {
+async fn run_parse(args: ParseArgs) -> anyhow::Result<()> {
     let path = resolve_path(&args.path).await?;
 
     println!("Parsing file: {}", path.display());
@@ -105,10 +105,11 @@ async fn run_parse(args: ParseArgs) -> Result<(), CliError> {
 
     let mut parser = BevymlParser::try_new()?;
     let parse_start = Instant::now();
-    let tree = parser.parse(&content);
+    let tree = parser.parse(&content)?;
     let parse_duration = parse_start.elapsed();
 
-    dbg!(tree.unwrap());
+    let tree: BevyNodeTree = tree.into();
+    dbg!(tree);
     println!("Parsing took {:.3}us", parse_duration.as_micros());
 
     Ok(())
