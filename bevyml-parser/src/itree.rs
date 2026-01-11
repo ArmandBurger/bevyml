@@ -118,7 +118,11 @@ fn is_element<'tree>(node: TsNode<'tree>) -> bool {
 fn build_ts_info<'tree>(node: TsNode<'tree>, source: &str) -> INodeInfo {
     let start = node.start_position();
     let end = node.end_position();
-    let text = node.utf8_text(source.as_bytes()).unwrap_or("").to_string();
+    let text = if node.kind() == "element" {
+        preview_element_text(node, source)
+    } else {
+        node.utf8_text(source.as_bytes()).unwrap_or("").to_string()
+    };
 
     INodeInfo {
         kind: node.kind().to_string(),
@@ -128,4 +132,27 @@ fn build_ts_info<'tree>(node: TsNode<'tree>, source: &str) -> INodeInfo {
         end_position: USizeVec2::new(end.row, end.column),
         text,
     }
+}
+
+fn preview_element_text<'tree>(node: TsNode<'tree>, source: &str) -> String {
+    let start_tag_text = find_child(node, "start_tag")
+        .and_then(|tag| tag.utf8_text(source.as_bytes()).ok())
+        .unwrap_or_default();
+    let end_tag_text = find_child(node, "end_tag")
+        .and_then(|tag| tag.utf8_text(source.as_bytes()).ok())
+        .unwrap_or_default();
+
+    if start_tag_text.is_empty() || end_tag_text.is_empty() {
+        return node.utf8_text(source.as_bytes()).unwrap_or("").to_string();
+    }
+
+    if has_inner_content(node) {
+        format!("{start_tag_text}...{end_tag_text}")
+    } else {
+        format!("{start_tag_text}{end_tag_text}")
+    }
+}
+
+fn has_inner_content<'tree>(node: TsNode<'tree>) -> bool {
+    node.named_child_count() > 2
 }
