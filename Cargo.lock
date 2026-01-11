@@ -767,6 +767,14 @@ dependencies = [
 ]
 
 [[package]]
+name = "bevyml-components"
+version = "0.1.0"
+dependencies = [
+ "bevy_ecs",
+ "serde",
+]
+
+[[package]]
 name = "bevyml-parser"
 version = "0.1.0"
 dependencies = [

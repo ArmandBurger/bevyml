@@ -1,14 +1,14 @@
 [package]
 name = "bevyml-parser"
 version = "0.1.0"
-edition = "2024"
+edition.workspace = true
 
 [dependencies]
-tree-sitter-bevyml = { path = "../tree-sitter-bevyml" }
-tree-sitter = "0.26.3"
-bevy_derive = "0.17.3"
-pollster = "0.4.0"
-tokio = { version = "1.49.0", features = ["full"] }
-bevy_ui = "0.17.3"
-bevy_math = "0.17.3"
-bevy_ecs = "0.17.3"
+tree-sitter-bevyml.workspace = true
+tree-sitter.workspace = true
+bevy_derive.workspace = true
+pollster.workspace = true
+tokio.workspace = true
+bevy_ui.workspace = true
+bevy_math.workspace = true
+bevy_ecs.workspace = true
