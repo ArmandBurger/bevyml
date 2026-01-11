@@ -1,7 +1,9 @@
 [workspace]
 resolver = "2"
 members = [
+    "bevyml",
     "bevyml-components",
+    "bevyml-demo",
     "bevyml-parser",
     "bevyml-parser-cli",
     "tree-sitter-bevyml",
@@ -11,19 +13,37 @@ members = [
 edition = "2024"
 
 [workspace.dependencies]
-tree-sitter-bevyml = { path = "tree-sitter-bevyml" }
+bevyml = { path = "bevyml" }
 bevyml-components = { path = "bevyml-components" }
 bevyml-parser = { path = "bevyml-parser" }
+tree-sitter-bevyml = { path = "tree-sitter-bevyml" }
+
+# Bevy
+bevy = "0.17.3"
+bevy_derive = "0.17.3"
+bevy_ecs = "0.17.3"
+bevy_math = "0.17.3"
+bevy_reflect = "0.17.3"
+bevy_ui = "0.17.3"
 
 # External
-tree-sitter = "0.26.3"
-bevy_derive = "0.17.3"
+anyhow = "1.0.100"
+clap = { version = "4.5.54", features = ["derive"] }
 pollster = "0.4.0"
 tokio = { version = "1.49.0", features = ["full"] }
-bevy_ui = "0.17.3"
-bevy_math = "0.17.3"
-bevy_ecs = "0.17.3"
-clap = { version = "4.5.54", features = ["derive"] }
-anyhow = "1.0.100"
+tree-sitter = "0.26.3"
 serde = { version = "1.0.228", features = ["derive"] }
-bevy_reflect = "0.17.3"
+
+[profile.dev.package."bevyml-demo"]
+opt-level = 1
+
+[profile.release.package."bevyml-demo"]
+opt-level = "z" # optimize for size
+# Compile the entire crate as one unit.
+# Slows compile times, marginal improvements.
+codegen-units = 1
+# Do a second optimization pass over the entire program, including dependencies.
+# Slows compile times, marginal improvements.
+# lto = "fat"
+debug = false     # don't emit debug info in final binary
+strip = "symbols" # request stripping of symbols (cargo 1.70+ supports this)
