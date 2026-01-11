@@ -10,7 +10,7 @@ use std::{fs as blocking_fs, io, path::Path};
 use tokio::fs as tokio_fs;
 use tree_sitter::{LanguageError, Parser};
 
-use crate::itree::ITree;
+use crate::itree::{ITree, ITreeError};
 
 #[derive(Deref, DerefMut)]
 pub struct BevymlParser(Parser);
@@ -34,9 +34,9 @@ impl BevymlParser {
         self.0.parse(txt, None)
     }
 
-    pub fn parse_ui_tree(&mut self, txt: &str) -> Option<ITree> {
-        let tree = self.parse(txt)?;
-        ITree::from_tree(&tree, txt)
+    pub fn parse_ui_tree(&mut self, txt: &str) -> Result<ITree, ITreeError> {
+        let tree = self.parse(txt).ok_or(ITreeError::MissingParseTree)?;
+        ITree::try_from((&tree, txt))
     }
 
     /// Parses the contents of a file asynchronously using Tokio-backed file I/O.

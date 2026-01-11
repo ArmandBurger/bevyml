@@ -5,7 +5,7 @@ use crate::{
     inode_info::INodeInfo,
     tree_sitter::{Node as TsNode, Tree},
 };
-use std::fmt;
+use std::{convert::TryFrom, fmt};
 
 /// Intermediary Tree
 pub struct ITree {
@@ -18,10 +18,29 @@ impl fmt::Debug for ITree {
     }
 }
 
-impl ITree {
-    pub fn from_tree(tree: &Tree, source: &str) -> Option<Self> {
-        let root = find_first_element(tree.root_node())?;
-        Some(Self {
+#[derive(Debug)]
+pub enum ITreeError {
+    MissingParseTree,
+    MissingRootElement,
+}
+
+impl fmt::Display for ITreeError {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        match self {
+            ITreeError::MissingParseTree => write!(f, "parser produced no tree"),
+            ITreeError::MissingRootElement => write!(f, "parsed tree contains no element nodes"),
+        }
+    }
+}
+
+impl std::error::Error for ITreeError {}
+
+impl TryFrom<(&Tree, &str)> for ITree {
+    type Error = ITreeError;
+
+    fn try_from((tree, source): (&Tree, &str)) -> Result<Self, Self::Error> {
+        let root = find_first_element(tree.root_node()).ok_or(ITreeError::MissingRootElement)?;
+        Ok(Self {
             root: build_ui_node(root, source),
         })
     }
