@@ -1,7 +1,4 @@
-use bevyml_parser::{
-    BevymlParser,
-    tree_sitter::{LanguageError, Node},
-};
+use bevyml_parser::{BevymlParser, tree_sitter::LanguageError};
 use clap::{Args, Parser, Subcommand};
 use std::{
     fmt, io,
@@ -27,8 +24,6 @@ struct Cli {
 enum Command {
     /// Parse a file and report the root node kind.
     Parse(ParseArgs),
-    /// Print the full tree dump as a debug view of the parser output.
-    Debug(ParseArgs),
 }
 
 #[derive(Args, Debug)]
@@ -96,12 +91,11 @@ async fn main() -> Result<(), CliError> {
     let cli = Cli::parse();
 
     match cli.command {
-        Command::Parse(args) => run_parse(args, false).await,
-        Command::Debug(args) => run_parse(args, true).await,
+        Command::Parse(args) => run_parse(args).await,
     }
 }
 
-async fn run_parse(args: ParseArgs, debug_tree: bool) -> Result<(), CliError> {
+async fn run_parse(args: ParseArgs) -> Result<(), CliError> {
     let path = resolve_path(&args.path).await?;
 
     println!("Parsing file: {}", path.display());
@@ -114,27 +108,7 @@ async fn run_parse(args: ParseArgs, debug_tree: bool) -> Result<(), CliError> {
     let tree = parser.parse(&content);
     let parse_duration = parse_start.elapsed();
 
-    match tree {
-        Some(tree) => {
-            let root = tree.root_node();
-            println!(
-                "Successfully parsed `{}`: root node `{}`",
-                path.display(),
-                root.kind()
-            );
-            if debug_tree {
-                println!("Dumping tree nodes:");
-                print_tree(root, &content, 0);
-            }
-        }
-        None => {
-            eprintln!(
-                "Parser produced no tree for `{}`. The file might be empty or invalid.",
-                path.display()
-            );
-        }
-    }
-
+    dbg!(tree.unwrap());
     println!("Parsing took {:.3}us", parse_duration.as_micros());
 
     Ok(())
@@ -152,22 +126,4 @@ async fn resolve_path(path: &Path) -> Result<PathBuf, CliError> {
     fs::canonicalize(path)
         .await
         .map_err(|err| CliError::io(path.to_owned(), "canonicalize path", err))
-}
-
-fn print_tree<'tree>(node: Node<'tree>, source: &str, depth: usize) {
-    let indent = "  ".repeat(depth);
-    let text = node
-        .utf8_text(source.as_bytes())
-        .unwrap_or("<invalid utf8>");
-    println!(
-        "{indent}{} [{}..{}]: {text}",
-        node.kind(),
-        node.start_byte(),
-        node.end_byte()
-    );
-
-    let mut cursor = node.walk();
-    for child in node.children(&mut cursor) {
-        print_tree(child, source, depth + 1);
-    }
 }
