@@ -1,14 +1,11 @@
 use bevy_ecs::component::Component;
+use bevy_reflect::Reflect;
 use serde::{Deserialize, Serialize};
-
-pub trait Element: Component {}
 
 macro_rules! element {
     ($name:ident) => {
-        #[derive(Component, Clone, Copy, Debug, Default, Serialize, Deserialize)]
+        #[derive(Reflect, Component, Clone, Copy, Debug, Default, Serialize, Deserialize)]
         pub struct $name;
-
-        impl Element for $name {}
     };
 }
 
