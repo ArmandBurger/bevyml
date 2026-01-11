@@ -1,8 +1,4 @@
-use bevyml_parser::{
-    BevymlParser,
-    inode::{BevyNodeTree, INode},
-    tree_sitter::LanguageError,
-};
+use bevyml_parser::{BevymlParser, inode::INode, tree_sitter::LanguageError};
 use clap::{Args, Parser, Subcommand};
 use std::{
     fmt, io,
@@ -113,8 +109,6 @@ async fn run_parse(args: ParseArgs) -> anyhow::Result<()> {
     print_inodes_ts_text(&tree.roots, 0);
     let parse_duration = parse_start.elapsed();
 
-    let trees: Vec<BevyNodeTree> = tree.into();
-    dbg!(trees);
     println!("Parsing took {:.3}us", parse_duration.as_micros());
 
     Ok(())
@@ -134,7 +128,7 @@ async fn resolve_path(path: &Path) -> Result<PathBuf, CliError> {
         .map_err(|err| CliError::io(path.to_owned(), "canonicalize path", err))
 }
 
-fn print_inodes_ts_text(nodes: &[INode], depth: usize) {
+fn print_inodes_ts_text<'source>(nodes: &[INode<'source>], depth: usize) {
     for node in nodes {
         let indent = "  ".repeat(depth);
         let element_name = node.element_name.as_deref().unwrap_or("<unknown>");
