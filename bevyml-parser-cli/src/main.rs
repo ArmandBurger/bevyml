@@ -6,6 +6,7 @@ use clap::{Args, Parser, Subcommand};
 use std::{
     fmt, io,
     path::{Path, PathBuf},
+    time::Instant,
 };
 use tokio::fs;
 
@@ -109,7 +110,11 @@ async fn run_parse(args: ParseArgs, debug_tree: bool) -> Result<(), CliError> {
         .map_err(|err| CliError::io(path.clone(), "read file content", err))?;
 
     let mut parser = BevymlParser::try_new()?;
-    match parser.parse(&content) {
+    let parse_start = Instant::now();
+    let tree = parser.parse(&content);
+    let parse_duration = parse_start.elapsed();
+
+    match tree {
         Some(tree) => {
             let root = tree.root_node();
             println!(
@@ -129,6 +134,8 @@ async fn run_parse(args: ParseArgs, debug_tree: bool) -> Result<(), CliError> {
             );
         }
     }
+
+    println!("Parsing took {:.3}us", parse_duration.as_micros());
 
     Ok(())
 }

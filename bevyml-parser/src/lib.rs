@@ -1,9 +1,16 @@
 pub use tree_sitter;
 
+pub mod inode;
+pub mod inode_info;
+pub mod itree;
+use tree_sitter::Tree;
+
 use bevy_derive::{Deref, DerefMut};
 use std::{fs as blocking_fs, io, path::Path};
 use tokio::fs as tokio_fs;
 use tree_sitter::{LanguageError, Parser};
+
+use crate::itree::ITree;
 
 #[derive(Deref, DerefMut)]
 pub struct BevymlParser(Parser);
@@ -23,12 +30,17 @@ impl BevymlParser {
         Self::try_new().expect("Error loading Bevyml grammar.")
     }
 
-    pub fn parse(&mut self, txt: &str) -> Option<tree_sitter::Tree> {
+    pub fn parse(&mut self, txt: &str) -> Option<Tree> {
         self.0.parse(txt, None)
     }
 
+    pub fn parse_ui_tree(&mut self, txt: &str) -> Option<ITree> {
+        let tree = self.parse(txt)?;
+        ITree::from_tree(&tree, txt)
+    }
+
     /// Parses the contents of a file asynchronously using Tokio-backed file I/O.
-    pub async fn parse_file_async<P>(&mut self, path: P) -> io::Result<Option<tree_sitter::Tree>>
+    pub async fn parse_file<P>(&mut self, path: P) -> io::Result<Option<Tree>>
     where
         P: AsRef<Path>,
     {
@@ -38,7 +50,7 @@ impl BevymlParser {
 
     /// Parses the contents of a file with blocking I/O via Pollster so callers that do not run on an
     /// async runtime can still reuse the parser.
-    pub fn parse_file<P>(&mut self, path: P) -> io::Result<Option<tree_sitter::Tree>>
+    pub fn parse_file_block_on<P>(&mut self, path: P) -> io::Result<Option<Tree>>
     where
         P: AsRef<Path>,
     {
