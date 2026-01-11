@@ -14,16 +14,16 @@ pub struct INode<'source> {
     pub children: Vec<INode<'source>>,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct BevyNodeTree {
     pub node: INodeBundle,
     pub children: Vec<BevyNodeTree>,
 }
 
-#[derive(Bundle)]
+#[derive(Bundle, Clone)]
 pub struct INodeBundle {
-    name: Name,
-    node: Node,
+    pub name: Name,
+    pub node: Node,
 }
 
 impl fmt::Debug for INodeBundle {

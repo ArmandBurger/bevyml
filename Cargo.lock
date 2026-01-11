@@ -1570,6 +1570,10 @@ dependencies = [
 [[package]]
 name = "bevyml"
 version = "0.1.0"
+dependencies = [
+ "bevy",
+ "bevyml-parser",
+]
 
 [[package]]
 name = "bevyml-components"
