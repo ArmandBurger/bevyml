@@ -1,21 +1,28 @@
+use bevy_ecs::name::Name;
 use bevy_log::debug;
 use bevy_math::USizeVec2;
 
 use crate::{
     attributes::Attributes,
-    inode::{BevyNodeTree, INode, NodeType},
+    inode::{BevyNodeTree, INode, INodeBundle, NodeId, NodeKind, NodeType},
     tree_sitter::{Node as TsNode, Tree},
 };
-use std::{convert::TryFrom, fmt};
+use std::{borrow::Cow, convert::TryFrom, fmt};
 
 /// Intermediary Tree
 pub struct ITree<'source> {
-    pub roots: Vec<INode<'source>>,
+    pub roots: Vec<NodeId>,
+    pub nodes: Vec<INode<'source>>,
+    pub child_indices: Vec<NodeId>,
 }
 
 impl<'source> fmt::Debug for ITree<'source> {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        f.debug_struct("ITree").field("roots", &self.roots).finish()
+        f.debug_struct("ITree")
+            .field("roots", &self.roots)
+            .field("nodes_len", &self.nodes.len())
+            .field("edges_len", &self.child_indices.len())
+            .finish()
     }
 }
 
@@ -40,34 +47,54 @@ impl<'source> TryFrom<(&Tree, &'source str)> for ITree<'source> {
     type Error = ITreeError;
 
     fn try_from((tree, source): (&Tree, &'source str)) -> Result<Self, Self::Error> {
-        let roots = collect_root_elements(tree.root_node(), source);
+        let mut itree = ITree::new();
+        let roots = collect_root_elements(tree.root_node(), source, &mut itree);
         if roots.is_empty() {
             return Err(ITreeError::MissingRootElement);
         }
 
-        Ok(Self { roots })
+        itree.roots = roots;
+        Ok(itree)
     }
 }
 
 impl<'source> Into<Vec<BevyNodeTree>> for ITree<'source> {
     fn into(self) -> Vec<BevyNodeTree> {
-        self.roots.into_iter().map(BevyNodeTree::from).collect()
+        self.into_bevy_trees()
     }
 }
 
 impl<'source> ITree<'source> {
+    fn new() -> Self {
+        Self {
+            roots: Vec::new(),
+            nodes: Vec::new(),
+            child_indices: Vec::new(),
+        }
+    }
+
+    pub fn node(&self, id: NodeId) -> &INode<'source> {
+        &self.nodes[id.index()]
+    }
+
+    pub fn children(&self, id: NodeId) -> &[NodeId] {
+        let range = self.nodes[id.index()].children.clone();
+        &self.child_indices[range]
+    }
+
     /// Prints a readable representation of the tree as seen in the CLI helper.
     pub fn pretty_print(&self) {
-        Self::print_nodes(&self.roots, 0);
+        self.print_nodes(&self.roots, 0);
     }
 
     /// Logs the same tree layout via Bevy's logging at the `debug` level.
     pub fn pretty_log(&self) {
-        Self::log_nodes(&self.roots, 0);
+        self.log_nodes(&self.roots, 0);
     }
 
-    fn print_nodes(nodes: &[INode<'source>], depth: usize) {
-        for node in nodes {
+    fn print_nodes(&self, nodes: &[NodeId], depth: usize) {
+        for node_id in nodes {
+            let node = &self.nodes[node_id.index()];
             let indent = "  ".repeat(depth);
             let tag_name = node.node_type.tag_name();
             let element_name = if tag_name.as_ref() == "unknown" {
@@ -77,14 +104,19 @@ impl<'source> ITree<'source> {
             };
             println!(
                 "{}- node_type={:?} element={} simplified_content={:?}",
-                indent, node.node_type, element_name, node.simplified_content
+                indent,
+                node.node_type,
+                element_name,
+                node.simplified_content.as_ref()
             );
-            Self::print_nodes(&node.children, depth + 1);
+            let children = self.children(*node_id);
+            self.print_nodes(children, depth + 1);
         }
     }
 
-    fn log_nodes(nodes: &[INode<'source>], depth: usize) {
-        for node in nodes {
+    fn log_nodes(&self, nodes: &[NodeId], depth: usize) {
+        for node_id in nodes {
+            let node = &self.nodes[node_id.index()];
             let indent = "  ".repeat(depth);
             let tag_name = node.node_type.tag_name();
             let element_name = if tag_name.as_ref() == "unknown" {
@@ -94,14 +126,32 @@ impl<'source> ITree<'source> {
             };
             debug!(
                 "{}- node_type={:?} element={} simplified_content={:?}",
-                indent, node.node_type, element_name, node.simplified_content
+                indent,
+                node.node_type,
+                element_name,
+                node.simplified_content.as_ref()
             );
-            Self::log_nodes(&node.children, depth + 1);
+            let children = self.children(*node_id);
+            self.log_nodes(children, depth + 1);
         }
+    }
+
+    fn into_bevy_trees(self) -> Vec<BevyNodeTree> {
+        let mut nodes: Vec<Option<INode<'source>>> = self.nodes.into_iter().map(Some).collect();
+        let child_indices = self.child_indices;
+        self.roots
+            .into_iter()
+            .map(|root| build_bevy_tree(root, &mut nodes, &child_indices))
+            .collect()
     }
 }
 
-fn build_ui_node<'tree, 'source>(node: TsNode<'tree>, source: &'source str) -> INode<'source> {
+fn build_ui_node<'tree, 'source>(
+    node: TsNode<'tree>,
+    source: &'source str,
+    itree: &mut ITree<'source>,
+    parent: Option<NodeId>,
+) -> NodeId {
     let (info_node, is_self_closing) = resolve_element_node(node);
     let node_type = extract_tag_name(info_node, source)
         .as_deref()
@@ -110,31 +160,14 @@ fn build_ui_node<'tree, 'source>(node: TsNode<'tree>, source: &'source str) -> I
     let attributes = extract_attributes(info_node, source);
     let start = info_node.start_position();
     let end = info_node.end_position();
-    let simplified_content = if is_self_closing {
-        info_node
-            .utf8_text(source.as_bytes())
-            .unwrap_or("")
-            .to_string()
-    } else if info_node.kind() == "element" {
-        preview_element_text(info_node, source)
-    } else {
-        info_node
-            .utf8_text(source.as_bytes())
-            .unwrap_or("")
-            .to_string()
-    };
     let original_text = extract_text_slice(info_node, source);
-    let mut children = Vec::new();
-    if !is_self_closing {
-        let mut cursor = node.walk();
-        for child in node.children(&mut cursor) {
-            if is_element(child) {
-                children.push(build_ui_node(child, source));
-            }
-        }
-    }
-
-    INode {
+    let simplified_content = if is_self_closing || info_node.kind() != "element" {
+        Cow::Borrowed(original_text)
+    } else {
+        preview_element_text(info_node, source, original_text)
+    };
+    let id = NodeId::new(itree.nodes.len());
+    itree.nodes.push(INode {
         node_type,
         attributes,
         start_byte: info_node.start_byte(),
@@ -144,6 +177,50 @@ fn build_ui_node<'tree, 'source>(node: TsNode<'tree>, source: &'source str) -> I
         simplified_content,
         original_text,
         is_self_closing,
+        parent,
+        children: 0..0,
+    });
+
+    let child_start = itree.child_indices.len();
+    if !is_self_closing {
+        let mut cursor = node.walk();
+        for child in node.children(&mut cursor) {
+            if is_element(child) {
+                let child_id = build_ui_node(child, source, itree, Some(id));
+                itree.child_indices.push(child_id);
+            }
+        }
+    }
+    let child_end = itree.child_indices.len();
+    itree.nodes[id.index()].children = child_start..child_end;
+    id
+}
+
+fn build_bevy_tree<'source>(
+    id: NodeId,
+    nodes: &mut [Option<INode<'source>>],
+    child_indices: &[NodeId],
+) -> BevyNodeTree {
+    let inode = nodes[id.index()]
+        .take()
+        .expect("node id should exist once in the arena");
+    let children_range = inode.children.clone();
+    let children = child_indices[children_range]
+        .iter()
+        .map(|child_id| build_bevy_tree(*child_id, nodes, child_indices))
+        .collect();
+    let node_type_for_node = inode.node_type.clone();
+    let node_name = node_type_for_node.tag_name().into_owned();
+
+    BevyNodeTree {
+        node: INodeBundle {
+            name: Name::new(node_name),
+            node: node_type_for_node.to_bevy_node(),
+            node_kind: NodeKind {
+                kind: inode.node_type,
+            },
+            attributes: inode.attributes,
+        },
         children,
     }
 }
@@ -174,11 +251,12 @@ fn find_child<'tree>(node: TsNode<'tree>, kind: &str) -> Option<TsNode<'tree>> {
 fn collect_root_elements<'tree, 'source>(
     node: TsNode<'tree>,
     source: &'source str,
-) -> Vec<INode<'source>> {
+    itree: &mut ITree<'source>,
+) -> Vec<NodeId> {
     let mut cursor = node.walk();
     node.children(&mut cursor)
         .filter(|child| is_element(*child))
-        .map(|child| build_ui_node(child, source))
+        .map(|child| build_ui_node(child, source, itree, None))
         .collect()
 }
 
@@ -188,7 +266,11 @@ fn is_element<'tree>(node: TsNode<'tree>) -> bool {
 
 const TEXT_PREVIEW_LIMIT: usize = 32;
 
-fn preview_element_text<'tree>(node: TsNode<'tree>, source: &str) -> String {
+fn preview_element_text<'tree, 'source>(
+    node: TsNode<'tree>,
+    source: &'source str,
+    original_text: &'source str,
+) -> Cow<'source, str> {
     let start_tag_text = find_child(node, "start_tag")
         .and_then(|tag| tag.utf8_text(source.as_bytes()).ok())
         .unwrap_or_default();
@@ -197,17 +279,22 @@ fn preview_element_text<'tree>(node: TsNode<'tree>, source: &str) -> String {
         .unwrap_or_default();
 
     if start_tag_text.is_empty() || end_tag_text.is_empty() {
-        return node.utf8_text(source.as_bytes()).unwrap_or("").to_string();
+        return Cow::Borrowed(original_text);
     }
 
-    if let Some(full_element_text) =
-        extract_text_only_content(node, source, &start_tag_text, &end_tag_text)
-    {
-        full_element_text
-    } else if has_inner_content(node) {
-        format!("{start_tag_text}...{end_tag_text}")
+    if text_only_preview_ok(node, source) {
+        return Cow::Borrowed(original_text);
+    }
+
+    if has_inner_content(node) {
+        return Cow::Owned(format!("{start_tag_text}...{end_tag_text}"));
+    }
+
+    let joined_len = start_tag_text.len() + end_tag_text.len();
+    if joined_len == original_text.len() {
+        Cow::Borrowed(original_text)
     } else {
-        format!("{start_tag_text}{end_tag_text}")
+        Cow::Owned(format!("{start_tag_text}{end_tag_text}"))
     }
 }
 
@@ -215,12 +302,7 @@ fn has_inner_content<'tree>(node: TsNode<'tree>) -> bool {
     node.named_child_count() > 2
 }
 
-fn extract_text_only_content<'tree>(
-    node: TsNode<'tree>,
-    source: &str,
-    start_tag_text: &str,
-    end_tag_text: &str,
-) -> Option<String> {
+fn text_only_preview_ok<'tree>(node: TsNode<'tree>, source: &str) -> bool {
     let mut cursor = node.walk();
     let mut text = String::new();
     for child in node.named_children(&mut cursor) {
@@ -229,7 +311,7 @@ fn extract_text_only_content<'tree>(
             continue;
         }
         if is_element(child) {
-            return None;
+            return false;
         }
         if let Ok(child_text) = child.utf8_text(source.as_bytes()) {
             text.push_str(child_text);
@@ -237,14 +319,14 @@ fn extract_text_only_content<'tree>(
     }
 
     if text.trim().is_empty() {
-        return None;
+        return false;
     }
 
     if text.trim().chars().count() > TEXT_PREVIEW_LIMIT {
-        return None;
-    } else {
-        Some(format!("{start_tag_text}{text}{end_tag_text}"))
+        return false;
     }
+
+    true
 }
 
 fn extract_text_slice<'source>(node: TsNode<'_>, source: &'source str) -> &'source str {

@@ -1,5 +1,7 @@
 use bevy_ecs::component::Component;
 use bevy_reflect::Reflect;
+use smallvec::SmallVec;
+use std::mem::Discriminant;
 
 #[derive(Clone, Debug, PartialEq, Eq, Reflect)]
 pub enum Attribute {
@@ -82,7 +84,9 @@ pub enum Attribute {
 
 #[derive(Component, Reflect, Clone, Debug, Default, PartialEq, Eq)]
 pub struct Attributes {
-    pub items: Vec<Attribute>,
+    pub items: SmallVec<[Attribute; 4]>,
+    #[reflect(ignore)]
+    index: SmallVec<[(Discriminant<Attribute>, usize); 8]>,
 }
 
 impl Attributes {
@@ -193,9 +197,18 @@ impl Attributes {
             return;
         }
         let discriminant = std::mem::discriminant(&attribute);
-        self.items
-            .retain(|item| std::mem::discriminant(item) != discriminant);
+        if let Some((_, index)) = self
+            .index
+            .iter_mut()
+            .find(|(entry, _)| *entry == discriminant)
+        {
+            self.items[*index] = attribute;
+            return;
+        }
+
+        let index = self.items.len();
         self.items.push(attribute);
+        self.index.push((discriminant, index));
     }
 }
 

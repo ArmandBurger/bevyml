@@ -1605,6 +1605,7 @@ dependencies = [
  "bevy_reflect",
  "bevy_ui",
  "pollster",
+ "smallvec",
  "strum",
  "strum_macros",
  "tokio",

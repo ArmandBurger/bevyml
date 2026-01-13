@@ -16,3 +16,4 @@ bevy_log.workspace = true
 bevy_reflect.workspace = true
 strum.workspace = true
 strum_macros.workspace = true
+smallvec.workspace = true

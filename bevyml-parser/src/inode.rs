@@ -1,4 +1,4 @@
-use std::{borrow::Cow, fmt, str::FromStr};
+use std::{borrow::Cow, fmt, ops::Range, str::FromStr};
 
 use bevy_ecs::{bundle::Bundle, component::Component, name::Name};
 use bevy_math::USizeVec2;
@@ -8,6 +8,20 @@ use strum_macros::{AsRefStr, EnumString};
 
 use crate::attributes::Attributes;
 
+#[derive(Copy, Clone, Debug, PartialEq, Eq, Hash)]
+pub struct NodeId(pub(crate) u32);
+
+impl NodeId {
+    pub(crate) fn new(index: usize) -> Self {
+        let index = u32::try_from(index).expect("node index overflow");
+        Self(index)
+    }
+
+    pub fn index(self) -> usize {
+        self.0 as usize
+    }
+}
+
 /// Intermediary Node
 pub struct INode<'source> {
     pub node_type: NodeType,
@@ -16,10 +30,11 @@ pub struct INode<'source> {
     pub end_byte: usize,
     pub start_position: USizeVec2,
     pub end_position: USizeVec2,
-    pub simplified_content: String,
+    pub simplified_content: Cow<'source, str>,
     pub original_text: &'source str,
     pub is_self_closing: bool,
-    pub children: Vec<INode<'source>>,
+    pub parent: Option<NodeId>,
+    pub children: Range<usize>,
 }
 
 #[derive(Debug, Clone)]
@@ -58,32 +73,13 @@ impl<'source> INode<'source> {
     }
 }
 
-impl<'source> From<INode<'source>> for BevyNodeTree {
-    fn from(inode: INode<'source>) -> Self {
-        let children = inode.children.into_iter().map(BevyNodeTree::from).collect();
-        let node_type_for_node = inode.node_type.clone();
-        let node_name = node_type_for_node.tag_name().into_owned();
-
-        BevyNodeTree {
-            node: INodeBundle {
-                name: Name::new(node_name),
-                node: node_type_for_node.to_bevy_node(),
-                node_kind: NodeKind {
-                    kind: inode.node_type,
-                },
-                attributes: inode.attributes,
-            },
-            children,
-        }
-    }
-}
-
 impl<'source> fmt::Debug for INode<'source> {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         f.debug_struct("INode")
             .field("node_type", &self.node_type)
             .field("attributes", &self.attributes)
             .field("simplified_content", &self.simplified_content)
+            .field("parent", &self.parent)
             .field("children", &self.children)
             .finish()
     }
