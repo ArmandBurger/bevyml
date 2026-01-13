@@ -1,10 +1,9 @@
 use bevy_ecs::name::Name;
 use bevy_log::debug;
-use bevy_math::USizeVec2;
 
 use crate::{
     attributes::Attributes,
-    inode::{BevyNodeTree, INode, INodeBundle, NodeId, NodeKind, NodeType},
+    inode::{BevyNodeTree, INode, INodeBundle, NodeId, NodeKind, NodeType, TextPosition},
     tree_sitter::{Node as TsNode, Tree},
 };
 use std::{borrow::Cow, convert::TryFrom, fmt};
@@ -173,8 +172,8 @@ fn build_ui_node<'tree, 'source>(
         attributes,
         start_byte: info_node.start_byte(),
         end_byte: info_node.end_byte(),
-        start_position: USizeVec2::new(start.row, start.column),
-        end_position: USizeVec2::new(end.row, end.column),
+        start_position: TextPosition::new(start.column, start.row),
+        end_position: TextPosition::new(end.column, end.row),
         simplified_content,
         original_text,
         is_self_closing,

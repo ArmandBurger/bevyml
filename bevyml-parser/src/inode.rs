@@ -1,7 +1,6 @@
 use std::{borrow::Cow, fmt, ops::Range, str::FromStr};
 
 use bevy_ecs::{bundle::Bundle, component::Component, name::Name};
-use bevy_math::USizeVec2;
 use bevy_reflect::Reflect;
 use bevy_ui::{Display, Node, UiRect, Val};
 use strum_macros::{AsRefStr, EnumString};
@@ -22,6 +21,18 @@ impl NodeId {
     }
 }
 
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
+pub struct TextPosition {
+    pub column: usize,
+    pub row: usize,
+}
+
+impl TextPosition {
+    pub const fn new(column: usize, row: usize) -> Self {
+        Self { column, row }
+    }
+}
+
 /// Intermediary Node
 pub struct INode<'source> {
     pub id: NodeId,
@@ -29,8 +40,8 @@ pub struct INode<'source> {
     pub attributes: Attributes,
     pub start_byte: usize,
     pub end_byte: usize,
-    pub start_position: USizeVec2,
-    pub end_position: USizeVec2,
+    pub start_position: TextPosition,
+    pub end_position: TextPosition,
     pub simplified_content: Cow<'source, str>,
     pub original_text: &'source str,
     pub is_self_closing: bool,
