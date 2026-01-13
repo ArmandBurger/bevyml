@@ -11,9 +11,7 @@ use crate::attributes::Attributes;
 pub struct INode<'source> {
     pub node_type: NodeType,
     pub element_name: Option<String>,
-    pub node: Node,
     pub attributes: Attributes,
-    pub syntax_kind: String,
     pub start_byte: usize,
     pub end_byte: usize,
     pub start_position: USizeVec2,
@@ -51,7 +49,7 @@ impl<'source> INode<'source> {
     pub fn to_bundle(&self) -> INodeBundle {
         INodeBundle {
             name: Name::new(self.element_name.clone().unwrap_or("unknown".to_string())),
-            node: self.node.clone(),
+            node: self.node_type.to_bevy_node(),
             node_kind: NodeKind {
                 kind: self.node_type.clone(),
             },
@@ -63,11 +61,12 @@ impl<'source> INode<'source> {
 impl<'source> From<INode<'source>> for BevyNodeTree {
     fn from(inode: INode<'source>) -> Self {
         let children = inode.children.into_iter().map(BevyNodeTree::from).collect();
+        let node_type_for_node = inode.node_type.clone();
 
         BevyNodeTree {
             node: INodeBundle {
                 name: Name::new(inode.element_name.unwrap_or("unknown".into())),
-                node: inode.node,
+                node: node_type_for_node.to_bevy_node(),
                 node_kind: NodeKind {
                     kind: inode.node_type,
                 },
@@ -84,7 +83,6 @@ impl<'source> fmt::Debug for INode<'source> {
             .field("node_type", &self.node_type)
             .field("element_name", &self.element_name)
             .field("attributes", &self.attributes)
-            .field("syntax_kind", &self.syntax_kind)
             .field("simplified_content", &self.simplified_content)
             .field("children", &self.children)
             .finish()

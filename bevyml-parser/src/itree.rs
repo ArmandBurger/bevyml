@@ -71,8 +71,8 @@ impl<'source> ITree<'source> {
             let indent = "  ".repeat(depth);
             let element_name = node.element_name.as_deref().unwrap_or("<unknown>");
             println!(
-                "{}- node_type={:?} kind={} element={} simplified_content={:?}",
-                indent, node.node_type, node.syntax_kind, element_name, node.simplified_content
+                "{}- node_type={:?} element={} simplified_content={:?}",
+                indent, node.node_type, element_name, node.simplified_content
             );
             Self::print_nodes(&node.children, depth + 1);
         }
@@ -83,8 +83,8 @@ impl<'source> ITree<'source> {
             let indent = "  ".repeat(depth);
             let element_name = node.element_name.as_deref().unwrap_or("<unknown>");
             debug!(
-                "{}- node_type={:?} kind={} element={} simplified_content={:?}",
-                indent, node.node_type, node.syntax_kind, element_name, node.simplified_content
+                "{}- node_type={:?} element={} simplified_content={:?}",
+                indent, node.node_type, element_name, node.simplified_content
             );
             Self::log_nodes(&node.children, depth + 1);
         }
@@ -98,7 +98,6 @@ fn build_ui_node<'tree, 'source>(node: TsNode<'tree>, source: &'source str) -> I
         .as_deref()
         .map(NodeType::from_tag_name)
         .unwrap_or_else(|| NodeType::Custom("unknown".to_string()));
-    let bevy_node = node_type.to_bevy_node();
     let attributes = extract_attributes(info_node, source);
     let start = info_node.start_position();
     let end = info_node.end_position();
@@ -115,11 +114,6 @@ fn build_ui_node<'tree, 'source>(node: TsNode<'tree>, source: &'source str) -> I
             .unwrap_or("")
             .to_string()
     };
-    let syntax_kind = if is_self_closing {
-        "element"
-    } else {
-        info_node.kind()
-    };
     let original_text = extract_text_slice(info_node, source);
     let mut children = Vec::new();
     if !is_self_closing {
@@ -134,9 +128,7 @@ fn build_ui_node<'tree, 'source>(node: TsNode<'tree>, source: &'source str) -> I
     INode {
         node_type,
         element_name,
-        node: bevy_node,
         attributes,
-        syntax_kind: syntax_kind.to_string(),
         start_byte: info_node.start_byte(),
         end_byte: info_node.end_byte(),
         start_position: USizeVec2::new(start.row, start.column),
