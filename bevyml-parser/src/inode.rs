@@ -1,11 +1,11 @@
 use std::fmt;
 
 use bevy_ecs::{bundle::Bundle, component::Component, name::Name};
+use bevy_math::USizeVec2;
 use bevy_reflect::Reflect;
 use bevy_ui::{Display, Node, UiRect, Val};
 
 use crate::attributes::Attributes;
-use crate::inode_info::INodeInfo;
 
 /// Intermediary Node
 pub struct INode<'source> {
@@ -13,7 +13,14 @@ pub struct INode<'source> {
     pub element_name: Option<String>,
     pub node: Node,
     pub attributes: Attributes,
-    pub ts_info: INodeInfo<'source>,
+    pub syntax_kind: String,
+    pub start_byte: usize,
+    pub end_byte: usize,
+    pub start_position: USizeVec2,
+    pub end_position: USizeVec2,
+    pub simplified_content: String,
+    pub original_text: &'source str,
+    pub is_self_closing: bool,
     pub children: Vec<INode<'source>>,
 }
 
@@ -77,7 +84,8 @@ impl<'source> fmt::Debug for INode<'source> {
             .field("node_type", &self.node_type)
             .field("element_name", &self.element_name)
             .field("attributes", &self.attributes)
-            .field("ts_info", &self.ts_info)
+            .field("syntax_kind", &self.syntax_kind)
+            .field("simplified_content", &self.simplified_content)
             .field("children", &self.children)
             .finish()
     }

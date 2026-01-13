@@ -4,7 +4,6 @@ use bevy_math::USizeVec2;
 use crate::{
     attributes::Attributes,
     inode::{BevyNodeTree, INode, NodeType},
-    inode_info::INodeInfo,
     tree_sitter::{Node as TsNode, Tree},
 };
 use std::{convert::TryFrom, fmt};
@@ -73,11 +72,7 @@ impl<'source> ITree<'source> {
             let element_name = node.element_name.as_deref().unwrap_or("<unknown>");
             println!(
                 "{}- node_type={:?} kind={} element={} simplified_content={:?}",
-                indent,
-                node.node_type,
-                node.ts_info.kind,
-                element_name,
-                node.ts_info.simplified_content
+                indent, node.node_type, node.syntax_kind, element_name, node.simplified_content
             );
             Self::print_nodes(&node.children, depth + 1);
         }
@@ -89,11 +84,7 @@ impl<'source> ITree<'source> {
             let element_name = node.element_name.as_deref().unwrap_or("<unknown>");
             debug!(
                 "{}- node_type={:?} kind={} element={} simplified_content={:?}",
-                indent,
-                node.node_type,
-                node.ts_info.kind,
-                element_name,
-                node.ts_info.simplified_content
+                indent, node.node_type, node.syntax_kind, element_name, node.simplified_content
             );
             Self::log_nodes(&node.children, depth + 1);
         }
@@ -109,7 +100,27 @@ fn build_ui_node<'tree, 'source>(node: TsNode<'tree>, source: &'source str) -> I
         .unwrap_or_else(|| NodeType::Custom("unknown".to_string()));
     let bevy_node = node_type.to_bevy_node();
     let attributes = extract_attributes(info_node, source);
-    let ts_info = build_ts_info(info_node, source, is_self_closing);
+    let start = info_node.start_position();
+    let end = info_node.end_position();
+    let simplified_content = if is_self_closing {
+        info_node
+            .utf8_text(source.as_bytes())
+            .unwrap_or("")
+            .to_string()
+    } else if info_node.kind() == "element" {
+        preview_element_text(info_node, source)
+    } else {
+        info_node
+            .utf8_text(source.as_bytes())
+            .unwrap_or("")
+            .to_string()
+    };
+    let syntax_kind = if is_self_closing {
+        "element"
+    } else {
+        info_node.kind()
+    };
+    let original_text = extract_text_slice(info_node, source);
     let mut children = Vec::new();
     if !is_self_closing {
         let mut cursor = node.walk();
@@ -125,7 +136,14 @@ fn build_ui_node<'tree, 'source>(node: TsNode<'tree>, source: &'source str) -> I
         element_name,
         node: bevy_node,
         attributes,
-        ts_info,
+        syntax_kind: syntax_kind.to_string(),
+        start_byte: info_node.start_byte(),
+        end_byte: info_node.end_byte(),
+        start_position: USizeVec2::new(start.row, start.column),
+        end_position: USizeVec2::new(end.row, end.column),
+        simplified_content,
+        original_text,
+        is_self_closing,
         children,
     }
 }
@@ -166,40 +184,6 @@ fn collect_root_elements<'tree, 'source>(
 
 fn is_element<'tree>(node: TsNode<'tree>) -> bool {
     matches!(node.kind(), "element" | "self_closing_element")
-}
-
-fn build_ts_info<'tree, 'source>(
-    node: TsNode<'tree>,
-    source: &'source str,
-    is_self_closing: bool,
-) -> INodeInfo<'source> {
-    let start = node.start_position();
-    let end = node.end_position();
-    let simplified_content = if is_self_closing {
-        node.utf8_text(source.as_bytes()).unwrap_or("").to_string()
-    } else if node.kind() == "element" {
-        preview_element_text(node, source)
-    } else {
-        node.utf8_text(source.as_bytes()).unwrap_or("").to_string()
-    };
-
-    let kind = if is_self_closing {
-        "element"
-    } else {
-        node.kind()
-    };
-    let original_text = extract_text_slice(node, source);
-
-    INodeInfo {
-        kind: kind.to_string(),
-        start_byte: node.start_byte(),
-        end_byte: node.end_byte(),
-        start_position: USizeVec2::new(start.row, start.column),
-        end_position: USizeVec2::new(end.row, end.column),
-        simplified_content,
-        original_text,
-        is_self_closing,
-    }
 }
 
 fn preview_element_text<'tree>(node: TsNode<'tree>, source: &str) -> String {
@@ -274,10 +258,7 @@ fn extract_attributes<'tree>(node: TsNode<'tree>, source: &str) -> Attributes {
     attributes
 }
 
-fn parse_attribute<'tree>(
-    node: TsNode<'tree>,
-    source: &str,
-) -> Option<(String, Option<String>)> {
+fn parse_attribute<'tree>(node: TsNode<'tree>, source: &str) -> Option<(String, Option<String>)> {
     let name_node = find_child(node, "attribute_name")?;
     let name = name_node.utf8_text(source.as_bytes()).ok()?.to_string();
     let value_node = find_child(node, "attribute_value");
