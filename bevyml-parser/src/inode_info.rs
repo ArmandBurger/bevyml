@@ -7,7 +7,7 @@ pub struct INodeInfo<'source> {
     pub end_byte: usize,
     pub start_position: USizeVec2,
     pub end_position: USizeVec2,
-    pub text: String,
+    pub simplified_content: String,
     pub original_text: &'source str,
     pub is_self_closing: bool,
 }

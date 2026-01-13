@@ -1,0 +1,26 @@
+{
+  // Use IntelliSense to learn about possible attributes.
+  // Hover to view descriptions of existing attributes.
+  // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Debug executable 'bevyml-demo'",
+      "type": "lldb",
+      "request": "launch",
+      "cargo": {
+        "args": ["run", "--bin=bevyml-demo", "--package=bevyml-demo"]
+      },
+      "args": []
+    },
+    {
+      "name": "Debug executable 'bevyml-parser-cli'",
+      "type": "lldb",
+      "request": "launch",
+      "cargo": {
+        "args": ["run", "--bin=bevyml-parser-cli", "--package=bevyml-parser-cli"]
+      },
+      "args": []
+    }
+  ]
+}

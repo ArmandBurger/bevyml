@@ -1,7 +1,8 @@
 use bevy::asset::{AssetLoader, LoadContext, io::Reader};
 use bevy::prelude::*;
 use bevyml_parser::BevymlParser;
-pub use bevyml_parser::inode::BevyNodeTree;
+pub use bevyml_parser::inode::{BevyNodeTree, NodeKind, NodeType};
+use bevyml_parser::itree::ITreeError;
 use std::{error::Error, fmt, str};
 
 #[derive(Asset, TypePath, Debug)]
@@ -17,7 +18,7 @@ pub struct BevymlAssetLoader;
 pub enum BevymlAssetLoaderError {
     Io(std::io::Error),
     Utf8(str::Utf8Error),
-    Parse(bevyml_parser::itree::ITreeError),
+    Parse(ITreeError),
 }
 
 impl fmt::Display for BevymlAssetLoaderError {
@@ -44,8 +45,8 @@ impl From<str::Utf8Error> for BevymlAssetLoaderError {
     }
 }
 
-impl From<bevyml_parser::itree::ITreeError> for BevymlAssetLoaderError {
-    fn from(value: bevyml_parser::itree::ITreeError) -> Self {
+impl From<ITreeError> for BevymlAssetLoaderError {
+    fn from(value: ITreeError) -> Self {
         Self::Parse(value)
     }
 }
@@ -66,6 +67,7 @@ impl AssetLoader for BevymlAssetLoader {
         let source = str::from_utf8(&bytes)?;
         let mut parser = BevymlParser::new();
         let tree = parser.parse(source)?;
+        tree.pretty_log();
         Ok(BevymlAsset { roots: tree.into() })
     }
 

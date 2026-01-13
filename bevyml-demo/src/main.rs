@@ -1,52 +1,66 @@
-use bevy::prelude::*;
-use bevyml::{BevyNodeTree, BevymlAsset, BevymlAssetPlugin};
+use bevy::{
+    color::palettes::tailwind,
+    log::{DEFAULT_FILTER, Level, LogPlugin},
+    prelude::*,
+};
+use bevyml::{BevymlAsset, BevymlAssetPlugin};
 
 fn main() {
     App::new()
-        .add_plugins(DefaultPlugins)
+        .add_plugins(DefaultPlugins.set(LogPlugin {
+            level: Level::INFO,
+            filter: format!(
+                "{},bevyml_demo=trace,bevyml_parser=trace,wgpu_hal=warn",
+                DEFAULT_FILTER
+            ),
+            ..default()
+        }))
         .add_plugins(BevymlAssetPlugin)
-        .init_resource::<UiState>()
         .add_systems(Startup, setup)
-        .add_systems(Update, spawn_on_load)
+        .add_systems(Update, spawn_ui)
         .run();
 }
 
-#[derive(Resource, Default)]
-struct UiState {
-    handle: Handle<BevymlAsset>,
-    spawned: bool,
+#[derive(Resource, Default, Deref)]
+pub struct BevymlUI(Handle<BevymlAsset>);
+
+fn setup(mut commands: Commands, asset_server: Res<AssetServer>) {
+    commands.spawn((Camera2d, IsDefaultUiCamera));
+
+    let document = asset_server.load::<BevymlAsset>("ui/demo.bevyml");
+    commands.insert_resource(BevymlUI(document));
 }
 
-fn setup(mut commands: Commands, asset_server: Res<AssetServer>, mut state: ResMut<UiState>) {
-    commands.spawn(Camera2d);
-    state.handle = asset_server.load("ui/demo.bevyml");
-}
-
-fn spawn_on_load(
+fn spawn_ui(
+    mut spawned: Local<bool>,
     mut commands: Commands,
-    mut state: ResMut<UiState>,
-    assets: Res<Assets<BevymlAsset>>,
+    res: ResMut<Assets<BevymlAsset>>,
+    ui: ResMut<BevymlUI>,
 ) {
-    if state.spawned {
+    if *spawned {
         return;
     }
 
-    let Some(asset) = assets.get(&state.handle) else {
-        return;
-    };
+    match res.get(&ui.0) {
+        Some(ml) => {
+            let roots = &ml.roots;
 
-    for root in &asset.roots {
-        spawn_tree(&mut commands, root);
+            for root in roots {
+                commands.spawn((
+                    root.node.name.clone(),
+                    root.node.node_kind.clone(),
+                    // root.node.node.clone(),
+                    Node {
+                        width: Val::Vw(100.0),
+                        height: Val::Vh(100.0),
+                        ..Default::default()
+                    },
+                    BackgroundColor(tailwind::BLUE_400.into()),
+                ));
+            }
+
+            *spawned = true;
+        }
+        None => bevy::log::error!("Failed to load UI root."),
     }
-
-    state.spawned = true;
-}
-
-fn spawn_tree(commands: &mut Commands, tree: &BevyNodeTree) -> Entity {
-    let entity = commands.spawn(tree.node.clone()).id();
-    for child in &tree.children {
-        let child_entity = spawn_tree(commands, child);
-        commands.entity(entity).add_child(child_entity);
-    }
-    entity
 }

@@ -6,3 +6,7 @@ edition.workspace = true
 [dependencies]
 bevy.workspace = true
 bevyml.workspace = true
+bevyml-parser.workspace = true
+
+[build-dependencies]
+fs_extra.workspace = true

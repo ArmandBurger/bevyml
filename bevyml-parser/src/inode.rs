@@ -1,7 +1,7 @@
 use std::fmt;
 
-use bevy_ecs::{bundle::Bundle, name::Name};
-use bevy_ui::Node;
+use bevy_ecs::{bundle::Bundle, component::Component, name::Name};
+use bevy_ui::{Display, Node, UiRect, Val};
 
 use crate::inode_info::INodeInfo;
 
@@ -24,6 +24,7 @@ pub struct BevyNodeTree {
 pub struct INodeBundle {
     pub name: Name,
     pub node: Node,
+    pub node_kind: NodeKind,
 }
 
 impl fmt::Debug for INodeBundle {
@@ -39,7 +40,10 @@ impl<'source> INode<'source> {
     pub fn to_bundle(&self) -> INodeBundle {
         INodeBundle {
             name: Name::new(self.element_name.clone().unwrap_or("unknown".to_string())),
-            node: Node::default(),
+            node: self.node.clone(),
+            node_kind: NodeKind {
+                kind: self.node_type.clone(),
+            },
         }
     }
 }
@@ -52,6 +56,9 @@ impl<'source> From<INode<'source>> for BevyNodeTree {
             node: INodeBundle {
                 name: Name::new(inode.element_name.unwrap_or("unknown".into())),
                 node: inode.node,
+                node_kind: NodeKind {
+                    kind: inode.node_type,
+                },
             },
             children,
         }
@@ -69,6 +76,7 @@ impl<'source> fmt::Debug for INode<'source> {
     }
 }
 
+#[derive(Clone, PartialEq, Eq)]
 pub enum NodeType {
     Html,
     Head,
@@ -118,6 +126,11 @@ pub enum NodeType {
     H5,
     H6,
     Custom(String),
+}
+
+#[derive(Component, Clone, Debug)]
+pub struct NodeKind {
+    pub kind: NodeType,
 }
 
 impl fmt::Debug for NodeType {
@@ -184,7 +197,66 @@ impl NodeType {
     }
 
     pub fn to_bevy_node(&self) -> Node {
-        Node::default()
+        match self {
+            NodeType::Html => block_node(),
+            NodeType::Head
+            | NodeType::Title
+            | NodeType::Meta
+            | NodeType::Link
+            | NodeType::Style
+            | NodeType::Script => Node {
+                display: Display::None,
+                ..Default::default()
+            },
+            NodeType::Body => Node {
+                display: Display::Block,
+                margin: UiRect::all(Val::Px(8.0)),
+                width: Val::Vw(100.0),
+                height: Val::Vh(100.0),
+                ..Default::default()
+            },
+            NodeType::Div
+            | NodeType::Header
+            | NodeType::Footer
+            | NodeType::Nav
+            | NodeType::Main
+            | NodeType::Section
+            | NodeType::Article
+            | NodeType::Aside
+            | NodeType::Form => block_node(),
+            NodeType::P => block_with_margin(BASE_FONT_PX),
+            NodeType::Ul | NodeType::Ol => Node {
+                display: Display::Block,
+                margin: margin_block(BASE_FONT_PX),
+                padding: UiRect {
+                    left: Val::Px(40.0),
+                    ..Default::default()
+                },
+                ..Default::default()
+            },
+            NodeType::Li => block_node(),
+            NodeType::Table
+            | NodeType::Thead
+            | NodeType::Tbody
+            | NodeType::Tfoot
+            | NodeType::Tr
+            | NodeType::Th
+            | NodeType::Td => block_node(),
+            NodeType::Hr => Node {
+                display: Display::Block,
+                margin: margin_block(BASE_FONT_PX * 0.5),
+                height: Val::Px(1.0),
+                width: Val::Percent(100.0),
+                ..Default::default()
+            },
+            NodeType::H1 => block_with_margin(BASE_FONT_PX * 0.67),
+            NodeType::H2 => block_with_margin(BASE_FONT_PX * 0.83),
+            NodeType::H3 => block_with_margin(BASE_FONT_PX),
+            NodeType::H4 => block_with_margin(BASE_FONT_PX * 1.33),
+            NodeType::H5 => block_with_margin(BASE_FONT_PX * 1.67),
+            NodeType::H6 => block_with_margin(BASE_FONT_PX * 2.33),
+            _ => Node::default(),
+        }
     }
 
     fn as_str(&self) -> &'static str {
@@ -238,5 +310,30 @@ impl NodeType {
             NodeType::H6 => "H6",
             NodeType::Custom(_) => "Custom",
         }
+    }
+}
+
+const BASE_FONT_PX: f32 = 16.0;
+
+fn block_node() -> Node {
+    Node {
+        display: Display::Block,
+        ..Default::default()
+    }
+}
+
+fn block_with_margin(px: f32) -> Node {
+    Node {
+        display: Display::Block,
+        margin: margin_block(px),
+        ..Default::default()
+    }
+}
+
+fn margin_block(px: f32) -> UiRect {
+    UiRect {
+        top: Val::Px(px),
+        bottom: Val::Px(px),
+        ..Default::default()
     }
 }

@@ -1,3 +1,4 @@
+use bevy_log::debug;
 use bevy_math::USizeVec2;
 
 use crate::{
@@ -51,6 +52,50 @@ impl<'source> TryFrom<(&Tree, &'source str)> for ITree<'source> {
 impl<'source> Into<Vec<BevyNodeTree>> for ITree<'source> {
     fn into(self) -> Vec<BevyNodeTree> {
         self.roots.into_iter().map(BevyNodeTree::from).collect()
+    }
+}
+
+impl<'source> ITree<'source> {
+    /// Prints a readable representation of the tree as seen in the CLI helper.
+    pub fn pretty_print(&self) {
+        Self::print_nodes(&self.roots, 0);
+    }
+
+    /// Logs the same tree layout via Bevy's logging at the `debug` level.
+    pub fn pretty_log(&self) {
+        Self::log_nodes(&self.roots, 0);
+    }
+
+    fn print_nodes(nodes: &[INode<'source>], depth: usize) {
+        for node in nodes {
+            let indent = "  ".repeat(depth);
+            let element_name = node.element_name.as_deref().unwrap_or("<unknown>");
+            println!(
+                "{}- node_type={:?} kind={} element={} simplified_content={:?}",
+                indent,
+                node.node_type,
+                node.ts_info.kind,
+                element_name,
+                node.ts_info.simplified_content
+            );
+            Self::print_nodes(&node.children, depth + 1);
+        }
+    }
+
+    fn log_nodes(nodes: &[INode<'source>], depth: usize) {
+        for node in nodes {
+            let indent = "  ".repeat(depth);
+            let element_name = node.element_name.as_deref().unwrap_or("<unknown>");
+            debug!(
+                "{}- node_type={:?} kind={} element={} simplified_content={:?}",
+                indent,
+                node.node_type,
+                node.ts_info.kind,
+                element_name,
+                node.ts_info.simplified_content
+            );
+            Self::log_nodes(&node.children, depth + 1);
+        }
     }
 }
 
@@ -127,7 +172,7 @@ fn build_ts_info<'tree, 'source>(
 ) -> INodeInfo<'source> {
     let start = node.start_position();
     let end = node.end_position();
-    let text = if is_self_closing {
+    let simplified_content = if is_self_closing {
         node.utf8_text(source.as_bytes()).unwrap_or("").to_string()
     } else if node.kind() == "element" {
         preview_element_text(node, source)
@@ -148,7 +193,7 @@ fn build_ts_info<'tree, 'source>(
         end_byte: node.end_byte(),
         start_position: USizeVec2::new(start.row, start.column),
         end_position: USizeVec2::new(end.row, end.column),
-        text,
+        simplified_content,
         original_text,
         is_self_closing,
     }
