@@ -8,7 +8,7 @@ use strum_macros::{AsRefStr, EnumString};
 
 use crate::attributes::Attributes;
 
-#[derive(Copy, Clone, Debug, PartialEq, Eq, Hash)]
+#[derive(Copy, Clone, Debug, PartialEq, Eq, Hash, Component)]
 pub struct NodeId(pub(crate) u32);
 
 impl NodeId {
@@ -24,6 +24,7 @@ impl NodeId {
 
 /// Intermediary Node
 pub struct INode<'source> {
+    pub id: NodeId,
     pub node_type: NodeType,
     pub attributes: Attributes,
     pub start_byte: usize,
@@ -45,6 +46,7 @@ pub struct BevyNodeTree {
 
 #[derive(Bundle, Clone)]
 pub struct INodeBundle {
+    pub id: NodeId,
     pub name: Name,
     pub node: Node,
     pub node_kind: NodeKind,
@@ -63,6 +65,7 @@ impl fmt::Debug for INodeBundle {
 impl<'source> INode<'source> {
     pub fn to_bundle(&self) -> INodeBundle {
         INodeBundle {
+            id: self.id,
             name: Name::new(self.node_type.tag_name().into_owned()),
             node: self.node_type.to_bevy_node(),
             node_kind: NodeKind {

@@ -168,6 +168,7 @@ fn build_ui_node<'tree, 'source>(
     };
     let id = NodeId::new(itree.nodes.len());
     itree.nodes.push(INode {
+        id,
         node_type,
         attributes,
         start_byte: info_node.start_byte(),
@@ -214,6 +215,7 @@ fn build_bevy_tree<'source>(
 
     BevyNodeTree {
         node: INodeBundle {
+            id: inode.id,
             name: Name::new(node_name),
             node: node_type_for_node.to_bevy_node(),
             node_kind: NodeKind {
