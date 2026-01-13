@@ -69,7 +69,12 @@ impl<'source> ITree<'source> {
     fn print_nodes(nodes: &[INode<'source>], depth: usize) {
         for node in nodes {
             let indent = "  ".repeat(depth);
-            let element_name = node.element_name.as_deref().unwrap_or("<unknown>");
+            let tag_name = node.node_type.tag_name();
+            let element_name = if tag_name.as_ref() == "unknown" {
+                "<unknown>"
+            } else {
+                tag_name.as_ref()
+            };
             println!(
                 "{}- node_type={:?} element={} simplified_content={:?}",
                 indent, node.node_type, element_name, node.simplified_content
@@ -81,7 +86,12 @@ impl<'source> ITree<'source> {
     fn log_nodes(nodes: &[INode<'source>], depth: usize) {
         for node in nodes {
             let indent = "  ".repeat(depth);
-            let element_name = node.element_name.as_deref().unwrap_or("<unknown>");
+            let tag_name = node.node_type.tag_name();
+            let element_name = if tag_name.as_ref() == "unknown" {
+                "<unknown>"
+            } else {
+                tag_name.as_ref()
+            };
             debug!(
                 "{}- node_type={:?} element={} simplified_content={:?}",
                 indent, node.node_type, element_name, node.simplified_content
@@ -93,8 +103,7 @@ impl<'source> ITree<'source> {
 
 fn build_ui_node<'tree, 'source>(node: TsNode<'tree>, source: &'source str) -> INode<'source> {
     let (info_node, is_self_closing) = resolve_element_node(node);
-    let element_name = extract_tag_name(info_node, source);
-    let node_type = element_name
+    let node_type = extract_tag_name(info_node, source)
         .as_deref()
         .map(NodeType::from_tag_name)
         .unwrap_or_else(|| NodeType::Custom("unknown".to_string()));
@@ -127,7 +136,6 @@ fn build_ui_node<'tree, 'source>(node: TsNode<'tree>, source: &'source str) -> I
 
     INode {
         node_type,
-        element_name,
         attributes,
         start_byte: info_node.start_byte(),
         end_byte: info_node.end_byte(),
