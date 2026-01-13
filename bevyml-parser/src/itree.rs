@@ -178,6 +178,8 @@ fn is_element<'tree>(node: TsNode<'tree>) -> bool {
     matches!(node.kind(), "element" | "self_closing_element")
 }
 
+const TEXT_PREVIEW_LIMIT: usize = 32;
+
 fn preview_element_text<'tree>(node: TsNode<'tree>, source: &str) -> String {
     let start_tag_text = find_child(node, "start_tag")
         .and_then(|tag| tag.utf8_text(source.as_bytes()).ok())
@@ -190,7 +192,11 @@ fn preview_element_text<'tree>(node: TsNode<'tree>, source: &str) -> String {
         return node.utf8_text(source.as_bytes()).unwrap_or("").to_string();
     }
 
-    if has_inner_content(node) {
+    if let Some(full_element_text) =
+        extract_text_only_content(node, source, &start_tag_text, &end_tag_text)
+    {
+        full_element_text
+    } else if has_inner_content(node) {
         format!("{start_tag_text}...{end_tag_text}")
     } else {
         format!("{start_tag_text}{end_tag_text}")
@@ -199,6 +205,38 @@ fn preview_element_text<'tree>(node: TsNode<'tree>, source: &str) -> String {
 
 fn has_inner_content<'tree>(node: TsNode<'tree>) -> bool {
     node.named_child_count() > 2
+}
+
+fn extract_text_only_content<'tree>(
+    node: TsNode<'tree>,
+    source: &str,
+    start_tag_text: &str,
+    end_tag_text: &str,
+) -> Option<String> {
+    let mut cursor = node.walk();
+    let mut text = String::new();
+    for child in node.named_children(&mut cursor) {
+        let kind = child.kind();
+        if kind == "start_tag" || kind == "end_tag" {
+            continue;
+        }
+        if is_element(child) {
+            return None;
+        }
+        if let Ok(child_text) = child.utf8_text(source.as_bytes()) {
+            text.push_str(child_text);
+        }
+    }
+
+    if text.trim().is_empty() {
+        return None;
+    }
+
+    if text.trim().chars().count() > TEXT_PREVIEW_LIMIT {
+        return None;
+    } else {
+        Some(format!("{start_tag_text}{text}{end_tag_text}"))
+    }
 }
 
 fn extract_text_slice<'source>(node: TsNode<'_>, source: &'source str) -> &'source str {
