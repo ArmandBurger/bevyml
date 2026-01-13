@@ -13,3 +13,4 @@ bevy_ui.workspace = true
 bevy_math.workspace = true
 bevy_ecs.workspace = true
 bevy_log.workspace = true
+bevy_reflect.workspace = true

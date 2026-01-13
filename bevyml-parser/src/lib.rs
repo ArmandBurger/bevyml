@@ -1,5 +1,6 @@
 pub use tree_sitter;
 
+pub mod attributes;
 pub mod inode;
 pub mod inode_info;
 pub mod itree;

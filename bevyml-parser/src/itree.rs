@@ -2,6 +2,7 @@ use bevy_log::debug;
 use bevy_math::USizeVec2;
 
 use crate::{
+    attributes::Attributes,
     inode::{BevyNodeTree, INode, NodeType},
     inode_info::INodeInfo,
     tree_sitter::{Node as TsNode, Tree},
@@ -107,6 +108,7 @@ fn build_ui_node<'tree, 'source>(node: TsNode<'tree>, source: &'source str) -> I
         .map(NodeType::from_tag_name)
         .unwrap_or_else(|| NodeType::Custom("unknown".to_string()));
     let bevy_node = node_type.to_bevy_node();
+    let attributes = extract_attributes(info_node, source);
     let ts_info = build_ts_info(info_node, source, is_self_closing);
     let mut children = Vec::new();
     if !is_self_closing {
@@ -122,6 +124,7 @@ fn build_ui_node<'tree, 'source>(node: TsNode<'tree>, source: &'source str) -> I
         node_type,
         element_name,
         node: bevy_node,
+        attributes,
         ts_info,
         children,
     }
@@ -244,4 +247,57 @@ fn resolve_element_node<'tree>(node: TsNode<'tree>) -> (TsNode<'tree>, bool) {
     }
 
     (node, false)
+}
+
+fn extract_attributes<'tree>(node: TsNode<'tree>, source: &str) -> Attributes {
+    let mut attributes = Attributes::default();
+    let attribute_parent = match node.kind() {
+        "self_closing_element" => Some(node),
+        "element" => find_child(node, "start_tag"),
+        _ => None,
+    };
+
+    let Some(parent) = attribute_parent else {
+        return attributes;
+    };
+
+    let mut cursor = parent.walk();
+    for child in parent.children(&mut cursor) {
+        if child.kind() != "attribute" {
+            continue;
+        }
+        if let Some((name, value)) = parse_attribute(child, source) {
+            attributes.add_raw_attribute(&name, value);
+        }
+    }
+
+    attributes
+}
+
+fn parse_attribute<'tree>(
+    node: TsNode<'tree>,
+    source: &str,
+) -> Option<(String, Option<String>)> {
+    let name_node = find_child(node, "attribute_name")?;
+    let name = name_node.utf8_text(source.as_bytes()).ok()?.to_string();
+    let value_node = find_child(node, "attribute_value");
+    let value = value_node.and_then(|node| extract_attribute_value(node, source));
+    Some((name, value))
+}
+
+fn extract_attribute_value<'tree>(node: TsNode<'tree>, source: &str) -> Option<String> {
+    let raw_value = node.utf8_text(source.as_bytes()).ok()?;
+    Some(unquote_attribute_value(raw_value))
+}
+
+fn unquote_attribute_value(value: &str) -> String {
+    let bytes = value.as_bytes();
+    if bytes.len() >= 2 {
+        let first = bytes[0];
+        let last = bytes[bytes.len() - 1];
+        if (first == b'"' && last == b'"') || (first == b'\'' && last == b'\'') {
+            return value[1..value.len() - 1].to_string();
+        }
+    }
+    value.to_string()
 }

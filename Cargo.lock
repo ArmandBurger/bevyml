@@ -1602,6 +1602,7 @@ dependencies = [
  "bevy_ecs",
  "bevy_log",
  "bevy_math",
+ "bevy_reflect",
  "bevy_ui",
  "pollster",
  "tokio",

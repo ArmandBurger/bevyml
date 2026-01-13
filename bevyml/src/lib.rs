@@ -1,6 +1,7 @@
 use bevy::asset::{AssetLoader, LoadContext, io::Reader};
 use bevy::prelude::*;
 use bevyml_parser::BevymlParser;
+pub use bevyml_parser::attributes::{Attribute, Attributes};
 pub use bevyml_parser::inode::{BevyNodeTree, NodeKind, NodeType};
 use bevyml_parser::itree::ITreeError;
 use std::{error::Error, fmt, str};

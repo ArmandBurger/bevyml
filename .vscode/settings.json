@@ -1,11 +1,23 @@
 {
   "cmake.sourceDirectory": "X:/Ghastly/bevyml/tree-sitter-bevyml",
   "cSpell.words": [
+    "accesskey",
+    "autocapitalize",
+    "autofocus",
+    "autoplay",
     "bevyml",
+    "contenteditable",
+    "enctype",
+    "enterkeyhint",
+    "inputmode",
     "itree",
     "KABOOOM",
     "LASTEXITCODE",
+    "maxlength",
+    "playsinline",
     "pscustomobject",
-    "supertypes"
+    "referrerpolicy",
+    "supertypes",
+    "tabindex"
   ]
 }

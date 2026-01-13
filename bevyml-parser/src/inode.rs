@@ -1,8 +1,10 @@
 use std::fmt;
 
 use bevy_ecs::{bundle::Bundle, component::Component, name::Name};
+use bevy_reflect::Reflect;
 use bevy_ui::{Display, Node, UiRect, Val};
 
+use crate::attributes::Attributes;
 use crate::inode_info::INodeInfo;
 
 /// Intermediary Node
@@ -10,6 +12,7 @@ pub struct INode<'source> {
     pub node_type: NodeType,
     pub element_name: Option<String>,
     pub node: Node,
+    pub attributes: Attributes,
     pub ts_info: INodeInfo<'source>,
     pub children: Vec<INode<'source>>,
 }
@@ -25,6 +28,7 @@ pub struct INodeBundle {
     pub name: Name,
     pub node: Node,
     pub node_kind: NodeKind,
+    pub attributes: Attributes,
 }
 
 impl fmt::Debug for INodeBundle {
@@ -44,6 +48,7 @@ impl<'source> INode<'source> {
             node_kind: NodeKind {
                 kind: self.node_type.clone(),
             },
+            attributes: self.attributes.clone(),
         }
     }
 }
@@ -59,6 +64,7 @@ impl<'source> From<INode<'source>> for BevyNodeTree {
                 node_kind: NodeKind {
                     kind: inode.node_type,
                 },
+                attributes: inode.attributes,
             },
             children,
         }
@@ -70,13 +76,14 @@ impl<'source> fmt::Debug for INode<'source> {
         f.debug_struct("INode")
             .field("node_type", &self.node_type)
             .field("element_name", &self.element_name)
+            .field("attributes", &self.attributes)
             .field("ts_info", &self.ts_info)
             .field("children", &self.children)
             .finish()
     }
 }
 
-#[derive(Clone, PartialEq, Eq)]
+#[derive(Clone, PartialEq, Eq, Reflect)]
 pub enum NodeType {
     Html,
     Head,
@@ -128,7 +135,7 @@ pub enum NodeType {
     Custom(String),
 }
 
-#[derive(Component, Clone, Debug)]
+#[derive(Component, Clone, Debug, Reflect)]
 pub struct NodeKind {
     pub kind: NodeType,
 }
