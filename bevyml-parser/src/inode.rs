@@ -2,10 +2,10 @@ use std::{borrow::Cow, fmt, ops::Range, str::FromStr};
 
 use bevy_ecs::{bundle::Bundle, component::Component, name::Name};
 use bevy_reflect::Reflect;
-use bevy_ui::{Display, Node, UiRect, Val};
+use bevy_ui::{BackgroundColor, BorderColor, Display, Node, UiRect, Val};
 use strum_macros::{AsRefStr, EnumString};
 
-use crate::attributes::Attributes;
+use crate::attributes::{Attribute, Attributes, StyleDeclaration};
 
 #[derive(Copy, Clone, Debug, PartialEq, Eq, Hash, Component)]
 pub struct NodeId(pub(crate) u32);
@@ -37,7 +37,7 @@ impl TextPosition {
 pub struct INode<'source> {
     pub id: NodeId,
     pub node_type: NodeType,
-    pub attributes: Attributes,
+    pub attributes: Attributes<Cow<'source, str>>,
     pub start_byte: usize,
     pub end_byte: usize,
     pub start_position: TextPosition,
@@ -60,6 +60,8 @@ pub struct INodeBundle {
     pub id: NodeId,
     pub name: Name,
     pub node: Node,
+    pub background_color: BackgroundColor,
+    pub border_color: BorderColor,
     pub node_kind: NodeKind,
     pub attributes: Attributes,
 }
@@ -75,14 +77,20 @@ impl fmt::Debug for INodeBundle {
 
 impl<'source> INode<'source> {
     pub fn to_bundle(&self) -> INodeBundle {
+        let mut node = self.node_type.to_bevy_node();
+        let mut background_color = BackgroundColor::DEFAULT;
+        let border_color = BorderColor::DEFAULT;
+        apply_style_attributes(&self.attributes, &mut node, &mut background_color);
         INodeBundle {
             id: self.id,
             name: Name::new(self.node_type.tag_name().into_owned()),
-            node: self.node_type.to_bevy_node(),
+            node,
+            background_color,
+            border_color,
             node_kind: NodeKind {
                 kind: self.node_type.clone(),
             },
-            attributes: self.attributes.clone(),
+            attributes: self.attributes.clone().into_owned(),
         }
     }
 }
@@ -96,6 +104,64 @@ impl<'source> fmt::Debug for INode<'source> {
             .field("parent", &self.parent)
             .field("children", &self.children)
             .finish()
+    }
+}
+
+fn apply_style_attributes<Str>(
+    attributes: &Attributes<Str>,
+    node: &mut Node,
+    background_color: &mut BackgroundColor,
+) {
+    for attribute in &attributes.items {
+        let Attribute::Style(style) = attribute else {
+            continue;
+        };
+        apply_style_declarations(node, background_color, &style.declarations);
+    }
+}
+
+fn apply_style_declarations(
+    node: &mut Node,
+    background_color: &mut BackgroundColor,
+    declarations: &[StyleDeclaration],
+) {
+    for declaration in declarations {
+        match declaration {
+            StyleDeclaration::Width(value) => node.width = *value,
+            StyleDeclaration::Height(value) => node.height = *value,
+            StyleDeclaration::MinWidth(value) => node.min_width = *value,
+            StyleDeclaration::MaxWidth(value) => node.max_width = *value,
+            StyleDeclaration::MinHeight(value) => node.min_height = *value,
+            StyleDeclaration::MaxHeight(value) => node.max_height = *value,
+            StyleDeclaration::Left(value) => node.left = *value,
+            StyleDeclaration::Right(value) => node.right = *value,
+            StyleDeclaration::Top(value) => node.top = *value,
+            StyleDeclaration::Bottom(value) => node.bottom = *value,
+            StyleDeclaration::Margin(value) => node.margin = *value,
+            StyleDeclaration::MarginLeft(value) => node.margin.left = *value,
+            StyleDeclaration::MarginRight(value) => node.margin.right = *value,
+            StyleDeclaration::MarginTop(value) => node.margin.top = *value,
+            StyleDeclaration::MarginBottom(value) => node.margin.bottom = *value,
+            StyleDeclaration::Padding(value) => node.padding = *value,
+            StyleDeclaration::PaddingLeft(value) => node.padding.left = *value,
+            StyleDeclaration::PaddingRight(value) => node.padding.right = *value,
+            StyleDeclaration::PaddingTop(value) => node.padding.top = *value,
+            StyleDeclaration::PaddingBottom(value) => node.padding.bottom = *value,
+            StyleDeclaration::Border(value) => node.border = value.thickness,
+            StyleDeclaration::BorderLeft(value) => node.border.left = *value,
+            StyleDeclaration::BorderRight(value) => node.border.right = *value,
+            StyleDeclaration::BorderTop(value) => node.border.top = *value,
+            StyleDeclaration::BorderBottom(value) => node.border.bottom = *value,
+            StyleDeclaration::BorderRadius(value) => node.border_radius = *value,
+            StyleDeclaration::BackgroundColor(value) => background_color.0 = value.clone(),
+            StyleDeclaration::RowGap(value) => node.row_gap = *value,
+            StyleDeclaration::ColumnGap(value) => node.column_gap = *value,
+            StyleDeclaration::Gap { row, column } => {
+                node.row_gap = *row;
+                node.column_gap = *column;
+            }
+            StyleDeclaration::FlexBasis(value) => node.flex_basis = *value,
+        }
     }
 }
 

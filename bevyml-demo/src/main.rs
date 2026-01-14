@@ -46,15 +46,11 @@ fn spawn_ui(
             let roots = &ml.roots;
 
             for root in roots {
+                dbg!(&root.node.node);
                 commands.spawn((
                     root.node.name.clone(),
                     root.node.node_kind.clone(),
-                    // root.node.node.clone(),
-                    Node {
-                        width: Val::Vw(100.0),
-                        height: Val::Vh(100.0),
-                        ..Default::default()
-                    },
+                    root.node.node.clone(),
                     BackgroundColor(tailwind::BLUE_400.into()),
                 ));
             }

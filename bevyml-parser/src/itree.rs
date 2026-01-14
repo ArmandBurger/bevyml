@@ -1,9 +1,8 @@
-use bevy_ecs::name::Name;
 use bevy_log::debug;
 
 use crate::{
     attributes::Attributes,
-    inode::{BevyNodeTree, INode, INodeBundle, NodeId, NodeKind, NodeType, TextPosition},
+    inode::{BevyNodeTree, INode, NodeId, NodeType, TextPosition},
     tree_sitter::{Node as TsNode, Tree},
 };
 use std::{borrow::Cow, convert::TryFrom, fmt};
@@ -209,19 +208,8 @@ fn build_bevy_tree<'source>(
         .iter()
         .map(|child_id| build_bevy_tree(*child_id, nodes, child_indices))
         .collect();
-    let node_type_for_node = inode.node_type.clone();
-    let node_name = node_type_for_node.tag_name().into_owned();
-
     BevyNodeTree {
-        node: INodeBundle {
-            id: inode.id,
-            name: Name::new(node_name),
-            node: node_type_for_node.to_bevy_node(),
-            node_kind: NodeKind {
-                kind: inode.node_type,
-            },
-            attributes: inode.attributes,
-        },
+        node: inode.to_bundle(),
         children,
     }
 }
@@ -354,7 +342,10 @@ fn resolve_element_node<'tree>(node: TsNode<'tree>) -> (TsNode<'tree>, bool) {
     (node, false)
 }
 
-fn extract_attributes<'tree>(node: TsNode<'tree>, source: &str) -> Attributes {
+fn extract_attributes<'tree, 'source>(
+    node: TsNode<'tree>,
+    source: &'source str,
+) -> Attributes<Cow<'source, str>> {
     let mut attributes = Attributes::default();
     let attribute_parent = match node.kind() {
         "self_closing_element" => Some(node),
@@ -372,34 +363,41 @@ fn extract_attributes<'tree>(node: TsNode<'tree>, source: &str) -> Attributes {
             continue;
         }
         if let Some((name, value)) = parse_attribute(child, source) {
-            attributes.add_raw_attribute(&name, value);
+            attributes.add_raw_attribute(name, value);
         }
     }
 
     attributes
 }
 
-fn parse_attribute<'tree>(node: TsNode<'tree>, source: &str) -> Option<(String, Option<String>)> {
+fn parse_attribute<'tree, 'source>(
+    node: TsNode<'tree>,
+    source: &'source str,
+) -> Option<(Cow<'source, str>, Option<Cow<'source, str>>)> {
     let name_node = find_child(node, "attribute_name")?;
-    let name = name_node.utf8_text(source.as_bytes()).ok()?.to_string();
+    let name = name_node.utf8_text(source.as_bytes()).ok()?;
+    let name = Cow::Borrowed(name);
     let value_node = find_child(node, "attribute_value");
     let value = value_node.and_then(|node| extract_attribute_value(node, source));
     Some((name, value))
 }
 
-fn extract_attribute_value<'tree>(node: TsNode<'tree>, source: &str) -> Option<String> {
+fn extract_attribute_value<'tree, 'source>(
+    node: TsNode<'tree>,
+    source: &'source str,
+) -> Option<Cow<'source, str>> {
     let raw_value = node.utf8_text(source.as_bytes()).ok()?;
     Some(unquote_attribute_value(raw_value))
 }
 
-fn unquote_attribute_value(value: &str) -> String {
+fn unquote_attribute_value<'source>(value: &'source str) -> Cow<'source, str> {
     let bytes = value.as_bytes();
     if bytes.len() >= 2 {
         let first = bytes[0];
         let last = bytes[bytes.len() - 1];
         if (first == b'"' && last == b'"') || (first == b'\'' && last == b'\'') {
-            return value[1..value.len() - 1].to_string();
+            return Cow::Borrowed(&value[1..value.len() - 1]);
         }
     }
-    value.to_string()
+    Cow::Borrowed(value)
 }
