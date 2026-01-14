@@ -6,3 +6,4 @@ edition.workspace = true
 [dependencies]
 bevy.workspace = true
 bevyml-parser.workspace = true
+notify-debouncer-full.workspace = true
