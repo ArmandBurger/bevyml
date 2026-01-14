@@ -11,7 +11,7 @@ pub struct BevymlAsset {
     pub roots: Vec<BevyNodeTree>,
 }
 
-#[derive(Default)]
+#[derive(Default, TypePath)]
 pub struct BevymlAssetLoader;
 
 #[non_exhaustive]
