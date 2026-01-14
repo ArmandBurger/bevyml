@@ -1,4 +1,5 @@
 use bevy_log::debug;
+use bevy_ui::widget::Text;
 
 use crate::{
     attributes::Attributes,
@@ -178,6 +179,7 @@ fn build_ui_node<'tree, 'source>(
         is_self_closing,
         parent,
         children: 0..0,
+        text: None,
     });
 
     let child_start = itree.child_indices.len();
@@ -187,6 +189,10 @@ fn build_ui_node<'tree, 'source>(
             if is_element(child) {
                 let child_id = build_ui_node(child, source, itree, Some(id));
                 itree.child_indices.push(child_id);
+            } else if is_text_node(child) {
+                if let Some(child_id) = build_text_node(child, source, itree, Some(id)) {
+                    itree.child_indices.push(child_id);
+                }
             }
         }
     }
@@ -208,10 +214,49 @@ fn build_bevy_tree<'source>(
         .iter()
         .map(|child_id| build_bevy_tree(*child_id, nodes, child_indices))
         .collect();
+    let text = inode
+        .text
+        .as_ref()
+        .map(|content| Text::new(content.as_ref()));
     BevyNodeTree {
         node: inode.to_bundle(),
+        text,
         children,
     }
+}
+
+fn build_text_node<'tree, 'source>(
+    node: TsNode<'tree>,
+    source: &'source str,
+    itree: &mut ITree<'source>,
+    parent: Option<NodeId>,
+) -> Option<NodeId> {
+    let original_text = extract_text_slice(node, source);
+    let trimmed = original_text.trim();
+    if trimmed.is_empty() {
+        return None;
+    }
+
+    let start = node.start_position();
+    let end = node.end_position();
+    let id = NodeId::new(itree.nodes.len());
+    itree.nodes.push(INode {
+        id,
+        node_type: NodeType::Text,
+        attributes: Attributes::default(),
+        start_byte: node.start_byte(),
+        end_byte: node.end_byte(),
+        start_position: TextPosition::new(start.column, start.row),
+        end_position: TextPosition::new(end.column, end.row),
+        simplified_content: Cow::Borrowed(trimmed),
+        original_text,
+        text: Some(Cow::Borrowed(trimmed)),
+        is_self_closing: true,
+        parent,
+        children: 0..0,
+    });
+
+    Some(id)
 }
 
 fn extract_tag_name<'tree>(node: TsNode<'tree>, source: &str) -> Option<String> {
@@ -251,6 +296,10 @@ fn collect_root_elements<'tree, 'source>(
 
 fn is_element<'tree>(node: TsNode<'tree>) -> bool {
     matches!(node.kind(), "element" | "self_closing_element")
+}
+
+fn is_text_node<'tree>(node: TsNode<'tree>) -> bool {
+    matches!(node.kind(), "text" | "entity" | "plain_ampersand")
 }
 
 const TEXT_PREVIEW_LIMIT: usize = 32;

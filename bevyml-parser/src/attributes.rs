@@ -2,7 +2,7 @@ use bevy_color::{palettes::basic, Color, Srgba};
 use bevy_ecs::component::Component;
 use bevy_log::warn;
 use bevy_reflect::Reflect;
-use bevy_ui::{BorderRadius, UiRect, Val};
+use bevy_ui::{AlignItems, BorderRadius, Display, JustifyContent, UiRect, Val};
 use smallvec::SmallVec;
 use std::{borrow::Cow, mem::Discriminant};
 
@@ -32,6 +32,7 @@ pub struct BorderStyle {
 
 #[derive(Clone, Debug, PartialEq, Reflect)]
 pub enum StyleDeclaration {
+    Display(Display),
     Width(Val),
     Height(Val),
     MinWidth(Val),
@@ -59,6 +60,8 @@ pub enum StyleDeclaration {
     BorderBottom(Val),
     BorderRadius(BorderRadius),
     BackgroundColor(Color),
+    AlignItems(AlignItems),
+    JustifyContent(JustifyContent),
     RowGap(Val),
     ColumnGap(Val),
     Gap { row: Val, column: Val },
@@ -588,6 +591,7 @@ fn parse_style_property<F>(
             push_unsupported,
             StyleDeclaration::Width,
         ),
+        "display" => apply_display_property(name_raw, value, declarations, push_unsupported),
         "height" => apply_val_property(
             name_raw,
             value,
@@ -793,6 +797,12 @@ fn parse_style_property<F>(
             push_unsupported,
             StyleDeclaration::BackgroundColor,
         ),
+        "align-items" => {
+            apply_align_items_property(name_raw, value, declarations, push_unsupported)
+        }
+        "justify-content" => {
+            apply_justify_content_property(name_raw, value, declarations, push_unsupported)
+        }
         "row-gap" => apply_val_property(
             name_raw,
             value,
@@ -834,6 +844,68 @@ fn apply_val_property<F>(
     match parse_val(value) {
         Ok(val) => {
             declarations.push(map(val));
+        }
+        Err(err) => {
+            warn!(
+                "unsupported style value for '{}': {:?} ({})",
+                name, value, err
+            );
+            push_unsupported(name, value);
+        }
+    }
+}
+
+fn apply_display_property<F>(
+    name: &str,
+    value: &str,
+    declarations: &mut SmallVec<[StyleDeclaration; 8]>,
+    push_unsupported: &mut F,
+) where
+    F: FnMut(&str, &str),
+{
+    match parse_display(value) {
+        Ok(display) => declarations.push(StyleDeclaration::Display(display)),
+        Err(err) => {
+            warn!(
+                "unsupported style value for '{}': {:?} ({})",
+                name, value, err
+            );
+            push_unsupported(name, value);
+        }
+    }
+}
+
+fn apply_align_items_property<F>(
+    name: &str,
+    value: &str,
+    declarations: &mut SmallVec<[StyleDeclaration; 8]>,
+    push_unsupported: &mut F,
+) where
+    F: FnMut(&str, &str),
+{
+    match parse_align_items(value) {
+        Ok(align_items) => declarations.push(StyleDeclaration::AlignItems(align_items)),
+        Err(err) => {
+            warn!(
+                "unsupported style value for '{}': {:?} ({})",
+                name, value, err
+            );
+            push_unsupported(name, value);
+        }
+    }
+}
+
+fn apply_justify_content_property<F>(
+    name: &str,
+    value: &str,
+    declarations: &mut SmallVec<[StyleDeclaration; 8]>,
+    push_unsupported: &mut F,
+) where
+    F: FnMut(&str, &str),
+{
+    match parse_justify_content(value) {
+        Ok(justify_content) => {
+            declarations.push(StyleDeclaration::JustifyContent(justify_content));
         }
         Err(err) => {
             warn!(
@@ -1039,6 +1111,7 @@ enum StyleParseError {
     Empty,
     InvalidNumber,
     InvalidColor(String),
+    InvalidKeyword(String),
     UnsupportedUnit(String),
     WrongArity {
         expected: &'static str,
@@ -1053,6 +1126,9 @@ impl std::fmt::Display for StyleParseError {
             StyleParseError::InvalidNumber => write!(f, "invalid number"),
             StyleParseError::InvalidColor(value) => {
                 write!(f, "invalid color '{}'", value)
+            }
+            StyleParseError::InvalidKeyword(value) => {
+                write!(f, "invalid keyword '{}'", value)
             }
             StyleParseError::UnsupportedUnit(unit) => {
                 write!(f, "unsupported unit '{}'", unit)
@@ -1144,6 +1220,63 @@ fn parse_color(value: &str) -> Result<Color, StyleParseError> {
         _ => return Err(StyleParseError::InvalidColor(trimmed.to_string())),
     };
     Ok(Color::from(color))
+}
+
+fn parse_display(value: &str) -> Result<Display, StyleParseError> {
+    let trimmed = value.trim();
+    if trimmed.is_empty() {
+        return Err(StyleParseError::Empty);
+    }
+    let lowered = trimmed.to_ascii_lowercase();
+    match lowered.as_str() {
+        "flex" => Ok(Display::Flex),
+        "grid" => Ok(Display::Grid),
+        "block" => Ok(Display::Block),
+        "none" => Ok(Display::None),
+        "inline-flex" => Ok(Display::Flex),
+        "inline-grid" => Ok(Display::Grid),
+        _ => Err(StyleParseError::InvalidKeyword(trimmed.to_string())),
+    }
+}
+
+fn parse_align_items(value: &str) -> Result<AlignItems, StyleParseError> {
+    let trimmed = value.trim();
+    if trimmed.is_empty() {
+        return Err(StyleParseError::Empty);
+    }
+    let lowered = trimmed.to_ascii_lowercase();
+    match lowered.as_str() {
+        "default" | "normal" | "auto" => Ok(AlignItems::Default),
+        "start" => Ok(AlignItems::Start),
+        "end" => Ok(AlignItems::End),
+        "flex-start" => Ok(AlignItems::FlexStart),
+        "flex-end" => Ok(AlignItems::FlexEnd),
+        "center" => Ok(AlignItems::Center),
+        "baseline" => Ok(AlignItems::Baseline),
+        "stretch" => Ok(AlignItems::Stretch),
+        _ => Err(StyleParseError::InvalidKeyword(trimmed.to_string())),
+    }
+}
+
+fn parse_justify_content(value: &str) -> Result<JustifyContent, StyleParseError> {
+    let trimmed = value.trim();
+    if trimmed.is_empty() {
+        return Err(StyleParseError::Empty);
+    }
+    let lowered = trimmed.to_ascii_lowercase();
+    match lowered.as_str() {
+        "default" | "normal" | "auto" => Ok(JustifyContent::Default),
+        "start" => Ok(JustifyContent::Start),
+        "end" => Ok(JustifyContent::End),
+        "flex-start" => Ok(JustifyContent::FlexStart),
+        "flex-end" => Ok(JustifyContent::FlexEnd),
+        "center" => Ok(JustifyContent::Center),
+        "stretch" => Ok(JustifyContent::Stretch),
+        "space-between" => Ok(JustifyContent::SpaceBetween),
+        "space-around" => Ok(JustifyContent::SpaceAround),
+        "space-evenly" => Ok(JustifyContent::SpaceEvenly),
+        _ => Err(StyleParseError::InvalidKeyword(trimmed.to_string())),
+    }
 }
 
 fn parse_number(raw: &str) -> Result<f32, StyleParseError> {

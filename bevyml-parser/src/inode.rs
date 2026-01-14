@@ -2,7 +2,7 @@ use std::{borrow::Cow, fmt, ops::Range, str::FromStr};
 
 use bevy_ecs::{bundle::Bundle, component::Component, name::Name};
 use bevy_reflect::Reflect;
-use bevy_ui::{BackgroundColor, BorderColor, Display, Node, UiRect, Val};
+use bevy_ui::{widget::Text, BackgroundColor, BorderColor, Display, Node, UiRect, Val};
 use strum_macros::{AsRefStr, EnumString};
 
 use crate::attributes::{Attribute, Attributes, StyleDeclaration};
@@ -44,6 +44,7 @@ pub struct INode<'source> {
     pub end_position: TextPosition,
     pub simplified_content: Cow<'source, str>,
     pub original_text: &'source str,
+    pub text: Option<Cow<'source, str>>,
     pub is_self_closing: bool,
     pub parent: Option<NodeId>,
     pub children: Range<usize>,
@@ -52,6 +53,7 @@ pub struct INode<'source> {
 #[derive(Debug, Clone)]
 pub struct BevyNodeTree {
     pub node: INodeBundle,
+    pub text: Option<Text>,
     pub children: Vec<BevyNodeTree>,
 }
 
@@ -127,6 +129,7 @@ fn apply_style_declarations(
 ) {
     for declaration in declarations {
         match declaration {
+            StyleDeclaration::Display(value) => node.display = *value,
             StyleDeclaration::Width(value) => node.width = *value,
             StyleDeclaration::Height(value) => node.height = *value,
             StyleDeclaration::MinWidth(value) => node.min_width = *value,
@@ -154,6 +157,8 @@ fn apply_style_declarations(
             StyleDeclaration::BorderBottom(value) => node.border.bottom = *value,
             StyleDeclaration::BorderRadius(value) => node.border_radius = *value,
             StyleDeclaration::BackgroundColor(value) => background_color.0 = value.clone(),
+            StyleDeclaration::AlignItems(value) => node.align_items = *value,
+            StyleDeclaration::JustifyContent(value) => node.justify_content = *value,
             StyleDeclaration::RowGap(value) => node.row_gap = *value,
             StyleDeclaration::ColumnGap(value) => node.column_gap = *value,
             StyleDeclaration::Gap { row, column } => {
@@ -215,6 +220,8 @@ pub enum NodeType {
     H4,
     H5,
     H6,
+    #[strum(serialize = "#text")]
+    Text,
     #[strum(disabled)]
     Custom(String),
 }
@@ -295,6 +302,7 @@ impl NodeType {
             NodeType::H4 => block_with_margin(BASE_FONT_PX * 1.33),
             NodeType::H5 => block_with_margin(BASE_FONT_PX * 1.67),
             NodeType::H6 => block_with_margin(BASE_FONT_PX * 2.33),
+            NodeType::Text => Node::default(),
             _ => Node::default(),
         }
     }

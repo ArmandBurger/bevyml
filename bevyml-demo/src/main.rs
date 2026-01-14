@@ -1,8 +1,9 @@
 use bevy::{
+    ecs::relationship::RelatedSpawnerCommands,
     log::{DEFAULT_FILTER, Level, LogPlugin},
     prelude::*,
 };
-use bevyml::{BevymlAsset, BevymlAssetPlugin};
+use bevyml::{BevyNodeTree, BevymlAsset, BevymlAssetPlugin};
 
 fn main() {
     App::new()
@@ -45,17 +46,35 @@ fn spawn_ui(
             let roots = &ml.roots;
 
             for root in roots {
-                dbg!(&root.node.node);
-                commands.spawn((
-                    root.node.name.clone(),
-                    root.node.node_kind.clone(),
-                    root.node.node.clone(),
-                    root.node.background_color.clone(),
-                ));
+                spawn_tree(&mut commands, root);
             }
 
             *spawned = true;
         }
         None => bevy::log::error!("Failed to load UI root."),
     }
+}
+
+fn spawn_tree(commands: &mut Commands, tree: &BevyNodeTree) {
+    let mut entity = commands.spawn(tree.node.clone());
+    if let Some(text) = tree.text.clone() {
+        entity.insert(text);
+    }
+    entity.with_children(|parent| {
+        for child in &tree.children {
+            spawn_tree_child(parent, child);
+        }
+    });
+}
+
+fn spawn_tree_child(parent: &mut RelatedSpawnerCommands<'_, ChildOf>, tree: &BevyNodeTree) {
+    let mut entity = parent.spawn(tree.node.clone());
+    if let Some(text) = tree.text.clone() {
+        entity.insert(text);
+    }
+    entity.with_children(|parent| {
+        for child in &tree.children {
+            spawn_tree_child(parent, child);
+        }
+    });
 }
