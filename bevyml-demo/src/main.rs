@@ -1,5 +1,4 @@
 use bevy::{
-    color::palettes::tailwind,
     log::{DEFAULT_FILTER, Level, LogPlugin},
     prelude::*,
 };
@@ -51,7 +50,7 @@ fn spawn_ui(
                     root.node.name.clone(),
                     root.node.node_kind.clone(),
                     root.node.node.clone(),
-                    BackgroundColor(tailwind::BLUE_400.into()),
+                    root.node.background_color.clone(),
                 ));
             }
 
